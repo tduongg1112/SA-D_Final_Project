@@ -1,0 +1,64 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}TechStore | Order Success{% endblock %}
+
+{% block content %}
+<section class="page-head">
+    <div>
+        <span class="eyebrow">Order created</span>
+        <h1>Order #{{ order.id }} completed successfully.</h1>
+        <p>The order is now visible with payment and shipping state across the separated services.</p>
+    </div>
+    <div class="page-head-actions">
+        <a class="button button-primary" href="{% url 'catalog:product-list' %}">Continue shopping</a>
+    </div>
+</section>
+
+<section class="success-layout">
+    <div class="summary-card success-main-card">
+        <div class="summary-row">
+            <span>Customer</span>
+            <strong>{{ order.customer_name }}</strong>
+        </div>
+        <div class="summary-row">
+            <span>Total</span>
+            <strong>${{ order.total }}</strong>
+        </div>
+        <div class="summary-row">
+            <span>Payment</span>
+            <strong>{{ order.payment_status_label }}</strong>
+        </div>
+        <div class="summary-row">
+            <span>Shipping</span>
+            <strong>{{ order.shipping_status_label }}</strong>
+        </div>
+        {% if order.payment_reference %}
+            <div class="summary-row">
+                <span>Payment reference</span>
+                <strong>{{ order.payment_reference }}</strong>
+            </div>
+        {% endif %}
+        {% if order.tracking_code %}
+            <div class="summary-row">
+                <span>Tracking code</span>
+                <strong>{{ order.tracking_code }}</strong>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="summary-card">
+        <span class="eyebrow">Order items</span>
+        <div class="order-item-list">
+            {% for item in order.items %}
+                <div class="order-item-card">
+                    <div>
+                        <strong>{{ item.product_name }}</strong>
+                        <span>{{ item.quantity }} x ${{ item.unit_price }}</span>
+                    </div>
+                    <strong>${{ item.line_total }}</strong>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}TechStore | Sign In{% endblock %}
+
+{% block content %}
+<section class="auth-layout">
+    <div class="auth-card">
+        <span class="eyebrow">Staff access</span>
+        <h1>Sign in to open the dashboard.</h1>
+        <p>Use the seeded account to review internal order activity.</p>
+        <form class="auth-form" method="post">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            <label>
+                Username
+                {{ form.username }}
+            </label>
+            <label>
+                Password
+                {{ form.password }}
+            </label>
+            <button class="button button-primary button-block" type="submit">Sign in</button>
+        </form>
+        <div class="auth-note">
+            <strong>Demo account</strong>
+            <span>staff / staff12345</span>
+        </div>
+    </div>
+</section>
+{% endblock %}

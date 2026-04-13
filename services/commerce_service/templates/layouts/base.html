@@ -1,0 +1,114 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}TechStore{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
+</head>
+<body>
+    <div class="app-shell">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">
+                <a class="brand-mark" href="{% url 'storefront:home' %}">
+                    <span class="brand-dot"></span>
+                    <span>TechStore</span>
+                </a>
+                <button class="sidebar-close" id="sidebar-close" type="button" aria-label="Close navigation">×</button>
+            </div>
+
+            <div class="sidebar-group">
+                <span class="sidebar-label">Navigation</span>
+                <nav class="sidebar-nav">
+                    <a class="sidebar-link {% if request.path == '/' %}active{% endif %}" href="{% url 'storefront:home' %}">
+                        <span class="sidebar-icon"></span>
+                        <span>Home</span>
+                    </a>
+                    <a class="sidebar-link {% if '/products/' in request.path %}active{% endif %}" href="{% url 'catalog:product-list' %}">
+                        <span class="sidebar-icon"></span>
+                        <span>Catalog</span>
+                    </a>
+                    <a class="sidebar-link {% if '/cart/' in request.path %}active{% endif %}" href="{% url 'cart:detail' %}">
+                        <span class="sidebar-icon"></span>
+                        <span>Cart</span>
+                    </a>
+                    <a class="sidebar-link {% if '/dashboard/' in request.path %}active{% endif %}" href="{% url 'dashboard:home' %}">
+                        <span class="sidebar-icon"></span>
+                        <span>Dashboard</span>
+                    </a>
+                    <a class="sidebar-link {% if '/gateway/' in request.path %}active{% endif %}" href="/gateway/">
+                        <span class="sidebar-icon"></span>
+                        <span>Gateway</span>
+                    </a>
+                </nav>
+            </div>
+
+            <div class="sidebar-group sidebar-muted-group">
+                <span class="sidebar-label">Workspace</span>
+                <div class="sidebar-stack">
+                    <div class="sidebar-note-card">
+                        <span class="sidebar-note-title">UI system</span>
+                        <p>Bright surfaces, calm blue accents, strict spacing.</p>
+                    </div>
+                    <div class="sidebar-note-card">
+                        <span class="sidebar-note-title">Flow</span>
+                        <p>Catalog, cart, checkout, payment, and shipping.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-footer">
+                {% if user.is_authenticated %}
+                    <div class="account-chip">
+                        <span class="account-avatar">{{ user.username|slice:":1"|upper }}</span>
+                        <div>
+                            <strong>{{ user.username }}</strong>
+                            <span>Authenticated</span>
+                        </div>
+                    </div>
+                    <form action="{% url 'logout' %}" method="post">
+                        {% csrf_token %}
+                        <button class="button button-secondary button-block" type="submit">Sign out</button>
+                    </form>
+                {% else %}
+                    <div class="sidebar-note-card">
+                        <span class="sidebar-note-title">Staff access</span>
+                        <p>Open the internal dashboard with the seeded account.</p>
+                    </div>
+                    <a class="button button-primary button-block" href="{% url 'login' %}">Sign in</a>
+                {% endif %}
+            </div>
+        </aside>
+
+        <div class="main-shell">
+            <header class="topbar">
+                <button class="sidebar-toggle" id="sidebar-toggle" type="button" aria-label="Open navigation">
+                    <span></span>
+                    <span></span>
+                </button>
+                <form class="topbar-search" method="get" action="{% url 'catalog:product-list' %}">
+                    <input type="search" name="q" placeholder="Search products or brands">
+                </form>
+                <div class="topbar-actions">
+                    <a class="topbar-chip" href="/gateway/">Gateway</a>
+                    <a class="button button-primary" href="{% url 'cart:detail' %}">Open cart</a>
+                </div>
+            </header>
+
+            <main class="content-shell">
+                {% if messages %}
+                    <div class="message-stack">
+                        {% for message in messages %}
+                            <div class="message-card">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                {% block content %}{% endblock %}
+            </main>
+        </div>
+    </div>
+
+    <script src="{% static 'js/app.js' %}"></script>
+</body>
+</html>

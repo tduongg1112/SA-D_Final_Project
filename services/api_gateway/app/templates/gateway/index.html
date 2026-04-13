@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TechStore Gateway</title>
+    <link rel="stylesheet" href="/gateway/static/gateway.css">
+</head>
+<body>
+    <main class="gateway-shell">
+        <section class="hero-card">
+            <div>
+                <p class="eyebrow">API Gateway</p>
+                <h1>TechStore service edge and traffic control plane</h1>
+                <p class="hero-copy">
+                    This gateway is the single public entry point for the storefront, internal business APIs,
+                    and AI assistant routes. It exposes health information, service visibility, and routing logic
+                    as a first-class architectural component.
+                </p>
+            </div>
+            <div class="hero-actions">
+                <a class="button primary" href="/">Open storefront</a>
+                <a class="button secondary" href="/gateway/api/services">Service JSON</a>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="panel-header">
+                <div>
+                    <p class="eyebrow">Live runtime</p>
+                    <h2>Registered services</h2>
+                </div>
+            </div>
+            <div class="card-grid">
+                {% for service in live_services %}
+                    <article class="service-card">
+                        <div class="service-top">
+                            <span class="badge">{{ service.type }}</span>
+                            {% if service.name in health %}
+                                <span class="status {{ health[service.name].status }}">{{ health[service.name].status }}</span>
+                            {% else %}
+                                <span class="status healthy">{{ service.status }}</span>
+                            {% endif %}
+                        </div>
+                        <h3>{{ service.name }}</h3>
+                        <p>{{ service.description }}</p>
+                        <code>{{ service.base_url }}</code>
+                    </article>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="panel-header">
+                <div>
+                    <p class="eyebrow">Target design</p>
+                    <h2>Microservice decomposition roadmap</h2>
+                </div>
+            </div>
+            <div class="target-grid">
+                {% for service in target_microservices %}
+                    <div class="target-chip">{{ service }}</div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="panel-header">
+                <div>
+                    <p class="eyebrow">Routing surface</p>
+                    <h2>Public gateway paths</h2>
+                </div>
+            </div>
+            <table class="route-table">
+                <thead>
+                    <tr>
+                        <th>Route</th>
+                        <th>Destination</th>
+                        <th>Purpose</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>/</td>
+                        <td>commerce-service</td>
+                        <td>Storefront UI</td>
+                    </tr>
+                    <tr>
+                        <td>/api/catalog/*</td>
+                        <td>catalog-service</td>
+                        <td>Catalog APIs</td>
+                    </tr>
+                    <tr>
+                        <td>/api/cart/*</td>
+                        <td>cart-service</td>
+                        <td>Cart APIs</td>
+                    </tr>
+                    <tr>
+                        <td>/api/orders/*</td>
+                        <td>ordering-service</td>
+                        <td>Ordering APIs</td>
+                    </tr>
+                    <tr>
+                        <td>/api/payments/*</td>
+                        <td>payment-service</td>
+                        <td>Payment APIs</td>
+                    </tr>
+                    <tr>
+                        <td>/api/shipping/*</td>
+                        <td>shipping-service</td>
+                        <td>Shipping APIs</td>
+                    </tr>
+                    <tr>
+                        <td>/api/ai/*</td>
+                        <td>ai-service</td>
+                        <td>Recommendation and assistant APIs</td>
+                    </tr>
+                    <tr>
+                        <td>/gateway/*</td>
+                        <td>api-gateway</td>
+                        <td>Operator UI and health</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+</body>
+</html>

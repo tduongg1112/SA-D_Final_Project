@@ -1,0 +1,320 @@
+TIỂU LUẬN MÔN HỌC
+
+TÀI LIỆU DIỄN GIẢI MỞ RỘNG TỪ ĐỀ BÀI GỐC
+
+Lưu ý:
+- Đây là bản diễn giải chi tiết được xây dựng từ nội dung scan của đề bài gốc.
+- Mục tiêu của tài liệu này là làm rõ ngữ cảnh, phạm vi và hướng triển khai để nhóm có thể thực hiện tiểu luận một cách chặt chẽ hơn.
+- Những nội dung dưới đây không thay thế đề bài gốc của giảng viên, mà là bản hiểu và cụ thể hóa lại để phục vụ phân tích, thiết kế và hiện thực.
+
+==================================================
+1. TỔNG QUAN YÊU CẦU MÔN HỌC
+==================================================
+
+Tiểu luận yêu cầu sinh viên trình bày quá trình thiết kế và hiện thực một hệ thống phần mềm theo định hướng:
+- Microservices.
+- Domain-Driven Design (DDD).
+- Có tích hợp AI service.
+- Có phần code minh họa hoặc hiện thực một phần đáng kể của hệ thống.
+
+Hệ thống chính được lựa chọn để triển khai là một nền tảng E-commerce.
+Ngoài ra, đề bài còn yêu cầu một case study thuộc lĩnh vực Healthcare để minh họa cho cách tiếp cận phân rã domain và chuyển từ Monolith sang Microservices.
+
+Từ đó có thể hiểu cấu trúc bài làm gồm hai phần lớn:
+- Phần nền tảng học thuật và phương pháp luận.
+- Phần áp dụng vào bài toán E-commerce và hiện thực hệ thống.
+
+==================================================
+2. DIỄN GIẢI THEO TỪNG CHƯƠNG
+==================================================
+
+Chương 1. Microservice (Version 1)
+
+Nội dung gốc:
+- Từ Mono đến Micro
+- Thiết kế Micro theo DDD
+- Case study: Hệ Healthcare
+
+Diễn giải chi tiết:
+- Trình bày sự khác nhau giữa kiến trúc Monolithic và Microservices.
+- Phân tích lý do vì sao một hệ thống có thể cần chuyển từ Mono sang Micro.
+- Nêu các vấn đề thường gặp của Monolith khi hệ thống lớn dần:
+  - khó mở rộng,
+  - coupling cao,
+  - khó bảo trì,
+  - khó triển khai độc lập.
+- Trình bày vai trò của DDD trong việc phân rã hệ thống thành các bounded contexts.
+- Sử dụng case study `Healthcare` như một ví dụ tham khảo nhằm minh họa:
+  - cách xác định domain,
+  - cách tách subdomain,
+  - cách xác định bounded context,
+  - cách suy nghĩ về service decomposition trước khi áp dụng sang hệ E-commerce.
+
+Ý nghĩa của Chương 1:
+- Đây là chương nền tảng lý thuyết.
+- Không phải phần code chính của đồ án.
+- Mục tiêu là chứng minh nhóm hiểu cách tư duy thiết kế hệ phân tán trước khi bước vào bài toán chính.
+
+--------------------------------------------------
+
+Chương 2. Hệ E-commerce
+
+Nội dung gốc:
+- Xác định yêu cầu
+- Phân rã hệ theo DDD
+
+Các nhóm nội dung xuất hiện trong đề:
+
+I. User
+- Admin
+- Staff
+- Customer
+
+II. Product
+- Product
+- Category
+
+III. Các nghiệp vụ giao dịch
+- Pay
+- Cart
+- Order
+- Shipping
+
+- AI service
+
+Diễn giải chi tiết:
+- Đây là chương quan trọng nhất về mặt nghiệp vụ.
+- Cần xác định rõ yêu cầu chức năng và yêu cầu phi chức năng cho hệ thống E-commerce.
+- Cần mô tả rõ các actor:
+  - Admin: quản trị hệ thống, quản lý người dùng và cấu hình tổng thể.
+  - Staff: vận hành sản phẩm, đơn hàng, giao hàng và nghiệp vụ hằng ngày.
+  - Customer: duyệt sản phẩm, tìm kiếm, thêm giỏ hàng, đặt hàng và tương tác với AI.
+- Cần xác định rõ các domain nghiệp vụ:
+  - User/Identity.
+  - Product/Catalog.
+  - Cart.
+  - Order.
+  - Payment.
+  - Shipping.
+  - AI service.
+- Cần phân rã hệ thống theo DDD thay vì chia module tùy tiện theo kỹ thuật hoặc theo loại sản phẩm.
+- Cần nêu rõ bounded contexts, trách nhiệm của từng context, dữ liệu nào thuộc quyền sở hữu của service nào.
+
+Mục tiêu của Chương 2:
+- Chuyển từ đề bài ngắn thành một mô hình nghiệp vụ rõ ràng.
+- Làm nền tảng cho thiết kế kiến trúc ở Chương 3.
+
+--------------------------------------------------
+
+Chương 3. Thiết kế
+
+Nội dung gốc:
+- Từng service
+- Connect service
+
+Diễn giải chi tiết:
+- Trình bày thiết kế kiến trúc tổng thể của hệ thống.
+- Mô tả từng service hoặc từng bounded context:
+  - trách nhiệm,
+  - dữ liệu sở hữu,
+  - API chính,
+  - quan hệ với các service khác.
+- Mô tả cách các service kết nối với nhau.
+- Làm rõ giao tiếp đồng bộ hay bất đồng bộ ở mức nào.
+- Thiết kế sơ đồ tổng thể như:
+  - use case diagram,
+  - context map,
+  - component diagram,
+  - deployment diagram,
+  - sequence diagram cho các luồng chính.
+
+Yêu cầu bổ sung cần đưa vào chương này:
+- Phải có `API Gateway`.
+- `API Gateway` là cổng vào duy nhất của hệ thống, nhận request từ client rồi định tuyến tới service phù hợp.
+- API Gateway cần được mô tả rõ về vai trò:
+  - entry point,
+  - routing,
+  - che giấu cấu trúc nội bộ,
+  - chuẩn hóa endpoint,
+  - hỗ trợ logging hoặc auth forwarding ở mức cơ bản.
+
+Trong hướng triển khai đề xuất:
+- Có thể dùng một `API Gateway service` có code riêng để xử lý routing, health, logging và điều phối request.
+- Gateway sẽ route request tới:
+  - Django core web/business app,
+  - AI service,
+  - hoặc các service tương ứng nếu hệ thống được tách riêng ở giai đoạn sau.
+
+Ý nghĩa của Chương 3:
+- Đây là phần nối giữa phân tích nghiệp vụ và hiện thực code.
+- Nếu Chương 2 trả lời câu hỏi “hệ thống cần làm gì”, thì Chương 3 trả lời “hệ thống sẽ được tổ chức và giao tiếp như thế nào”.
+
+--------------------------------------------------
+
+Chương 4. AI Service
+
+Nội dung gốc:
+- Phân tích hành vi khách hàng
+- Deep Learning
+- Knowledge Base
+- RAG
+
+Diễn giải chi tiết:
+- Hệ thống cần có một thành phần AI riêng để tạo điểm nhấn công nghệ cho đồ án.
+- Vai trò của AI service có thể bao gồm:
+  - hỗ trợ tư vấn sản phẩm,
+  - gợi ý sản phẩm theo nhu cầu,
+  - hỗ trợ hỏi đáp dựa trên knowledge base,
+  - phân tích hành vi khách hàng ở mức cơ bản.
+- Phần `Deep Learning` nên được hiểu theo hướng linh hoạt:
+  - có thể trình bày ở mức khái niệm hoặc mô hình đơn giản,
+  - không bắt buộc phải xây một pipeline huấn luyện nặng nếu điều đó không phục vụ trực tiếp cho demo.
+- `Knowledge Base` là tập dữ liệu tri thức phục vụ AI trả lời.
+- `RAG` được sử dụng để truy xuất thông tin liên quan trước khi sinh câu trả lời hoặc gợi ý.
+
+Yêu cầu tối thiểu hợp lý cho AI service:
+- Có API riêng.
+- Có knowledge base về sản phẩm.
+- Trả lời được các câu hỏi cơ bản về sản phẩm hoặc nhu cầu mua sắm.
+- Có thể giải thích được AI service đọc dữ liệu gì và trả ra kết quả gì.
+
+--------------------------------------------------
+
+Chương 5. Code
+
+Nội dung gốc:
+- Code
+
+Diễn giải chi tiết:
+- Cần hiện thực hệ thống ở mức đủ để chứng minh được:
+  - cấu trúc kiến trúc đã thiết kế,
+  - các domain chính của hệ E-commerce,
+  - sự tồn tại và vai trò của AI service,
+  - vai trò của API Gateway.
+- Phần code không nhất thiết phải triển khai toàn bộ hệ thống ở mức production-ready.
+- Tuy nhiên phải có một số luồng chính hoạt động được, ví dụ:
+  - xem sản phẩm,
+  - thêm vào giỏ hàng,
+  - đặt hàng,
+  - mô phỏng thanh toán,
+  - lưu/trình bày thông tin giao hàng,
+  - hỏi đáp qua AI service.
+
+==================================================
+3. HƯỚNG TRIỂN KHAI ĐỀ XUẤT CHO TIỂU LUẬN
+==================================================
+
+Chủ đề hệ thống:
+- Xây dựng hệ thống `TechStore E-commerce` bán các sản phẩm công nghệ.
+
+Hướng công nghệ phù hợp:
+- `Django` làm nền tảng backend chính để bám sát yêu cầu môn học.
+- `PostgreSQL` làm cơ sở dữ liệu.
+- `FastAPI` hoặc một service Python riêng làm `API Gateway`.
+- `FastAPI` hoặc Python service riêng cho `AI service`.
+- Frontend có thể làm bằng Django Templates kết hợp CSS/JS hiện đại để đảm bảo giao diện đẹp và mượt.
+
+Hướng kiến trúc phù hợp:
+- Về mặt báo cáo: mô tả hệ thống theo tư duy Microservices + DDD.
+- Về mặt hiện thực: có thể triển khai trước dưới dạng `modular monolith theo bounded contexts`, sau đó đặt `API Gateway` ở lớp ngoài.
+- Cách làm này giúp:
+  - đúng tinh thần môn học,
+  - dễ code hơn,
+  - giảm rủi ro,
+  - vẫn có đường nâng cấp sang microservices thực sự.
+
+==================================================
+4. CÁC THÀNH PHẦN CHÍNH CẦN CÓ TRONG HỆ THỐNG
+==================================================
+
+1. User / Identity
+- Admin
+- Staff
+- Customer
+- Authentication và authorization cơ bản
+
+2. Catalog
+- Product
+- Category
+- Danh sách sản phẩm
+- Chi tiết sản phẩm
+- Tìm kiếm và lọc cơ bản
+
+3. Cart
+- Thêm sản phẩm vào giỏ
+- Cập nhật số lượng
+- Xóa sản phẩm
+- Tính tổng tiền tạm thời
+
+4. Order
+- Tạo đơn hàng
+- Xem trạng thái đơn
+- Lịch sử mua hàng
+
+5. Payment
+- Mô phỏng thanh toán
+- Theo dõi trạng thái thanh toán
+
+6. Shipping
+- Thông tin nhận hàng
+- Phương thức giao hàng
+- Trạng thái giao hàng
+
+7. AI Service
+- Hỏi đáp về sản phẩm
+- Gợi ý sản phẩm
+- Phân tích hành vi khách hàng ở mức cơ bản
+- Knowledge Base
+- RAG
+
+8. API Gateway
+- Điểm vào duy nhất của hệ thống
+- Nhận request từ client
+- Định tuyến request đến service tương ứng
+- Giúp kiến trúc hệ thống rõ ràng và đúng yêu cầu môn học
+
+==================================================
+5. CÁC LUỒNG NGHIỆP VỤ NÊN CÓ ĐỂ DEMO
+==================================================
+
+- Customer truy cập hệ thống qua API Gateway.
+- Customer xem danh sách và chi tiết sản phẩm.
+- Customer thêm sản phẩm vào giỏ hàng.
+- Customer thực hiện checkout.
+- Hệ thống tạo đơn hàng.
+- Hệ thống mô phỏng thanh toán.
+- Hệ thống ghi nhận địa chỉ và trạng thái giao hàng.
+- Customer hỏi AI để nhận tư vấn hoặc gợi ý sản phẩm.
+- Staff hoặc Admin quản lý dữ liệu liên quan.
+
+==================================================
+6. TRỌNG TÂM ĐÁNH GIÁ GẦN NHẤT
+==================================================
+
+Theo nội dung scan từ đề bài gốc, phần đánh giá gần nhất tập trung vào:
+- `Phần II` của hệ E-commerce.
+- `AI service`.
+
+Mốc thời gian ghi trong bản scan là:
+- `14/4`
+
+Do đề bài scan không thể hiện rõ năm, cần hiểu đây là mốc đánh giá được ghi trực tiếp trong ảnh gốc đã scan lại.
+
+==================================================
+7. KẾT LUẬN DIỄN GIẢI
+==================================================
+
+Từ đề bài gốc có thể rút ra định hướng thực hiện hợp lý như sau:
+- Chương 1 dùng để xây dựng nền tảng lý thuyết và case study tham khảo.
+- Công việc chính bắt đầu từ Chương 2 với hệ `TechStore E-commerce`.
+- Hệ thống cần được phân rã theo DDD.
+- Phải có `AI service`.
+- Phải có `API Gateway`.
+- Phần code cần đủ để chứng minh kiến trúc và demo được các luồng cốt lõi.
+
+Đây sẽ là cơ sở để tiếp tục xây dựng:
+- tài liệu phân tích yêu cầu,
+- thiết kế bounded contexts,
+- thiết kế kiến trúc,
+- kế hoạch coding,
+- và báo cáo hoàn chỉnh cho tiểu luận.

@@ -1,0 +1,112 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}TechStore | Cart{% endblock %}
+
+{% block content %}
+<section class="page-head">
+    <div>
+        <span class="eyebrow">Cart and checkout</span>
+        <h1>Review items and complete checkout.</h1>
+        <p>Summary-first layout with cleaner spacing and faster scanning.</p>
+    </div>
+    <div class="page-head-actions">
+        <a class="button button-secondary" href="{% url 'catalog:product-list' %}">Continue shopping</a>
+    </div>
+</section>
+
+<section class="checkout-layout">
+    <div class="cart-column">
+        {% for item in cart.items %}
+            <article class="cart-card">
+                <div class="cart-card-visual" style="background: linear-gradient(135deg, {{ item.accent_color|default:'#EEF4FF' }}, #ffffff);">
+                    <span>{{ item.category|default:"Product" }}</span>
+                </div>
+                <div class="cart-card-body">
+                    <div class="cart-card-copy">
+                        <span class="pill">{{ item.category|default:"Product" }}</span>
+                        <h3>{{ item.product }}</h3>
+                        <p>{{ item.short_description|default:"Configured for storefront testing." }}</p>
+                    </div>
+                    <div class="cart-card-meta">
+                        <span>{{ item.brand|default:"TechStore" }}</span>
+                        <strong>${{ item.price }}</strong>
+                    </div>
+                    <div class="cart-card-actions">
+                        <form action="{% url 'cart:update-item' item.id %}" method="post" class="quantity-form">
+                            {% csrf_token %}
+                            <input name="quantity" type="number" min="1" value="{{ item.quantity }}">
+                            <button class="button button-secondary" type="submit">Update</button>
+                        </form>
+                        <div class="cart-line-total">
+                            <strong>${{ item.line_total }}</strong>
+                            <form action="{% url 'cart:remove-item' item.id %}" method="post">
+                                {% csrf_token %}
+                                <button class="text-button" type="submit">Remove</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        {% empty %}
+            <div class="empty-state">
+                <h3>Your cart is empty.</h3>
+                <p>Add a few products from the catalog to test the checkout flow.</p>
+                <a class="button button-primary" href="{% url 'catalog:product-list' %}">Browse products</a>
+            </div>
+        {% endfor %}
+    </div>
+
+    <aside class="checkout-column">
+        <div class="summary-card">
+            <span class="eyebrow">Summary</span>
+            <h2>{{ cart.item_count }} items</h2>
+            <div class="summary-row">
+                <span>Subtotal</span>
+                <strong>${{ cart.subtotal }}</strong>
+            </div>
+            <div class="summary-row">
+                <span>Shipping</span>
+                <strong>${{ cart.shipping_fee }}</strong>
+            </div>
+            <div class="summary-row total">
+                <span>Total</span>
+                <strong>${{ cart.total }}</strong>
+            </div>
+        </div>
+
+        {% if cart.items %}
+            <div class="summary-card">
+                <span class="eyebrow">Checkout form</span>
+                <h3>Shipping details</h3>
+                <form class="checkout-form" action="{% url 'ordering:checkout' %}" method="post">
+                    {% csrf_token %}
+                    {% if checkout_form.non_field_errors %}
+                        <div class="form-errors">{{ checkout_form.non_field_errors }}</div>
+                    {% endif %}
+                    <label>
+                        Full name
+                        <input type="text" name="customer_name" value="{{ checkout_form.customer_name.value|default:'' }}" required>
+                    </label>
+                    <label>
+                        Email
+                        <input type="email" name="customer_email" value="{{ checkout_form.customer_email.value|default:'' }}" required>
+                    </label>
+                    <label>
+                        Phone number
+                        <input type="text" name="customer_phone" value="{{ checkout_form.customer_phone.value|default:'' }}" required>
+                    </label>
+                    <label>
+                        Shipping address
+                        <textarea name="shipping_address" rows="4" required>{{ checkout_form.shipping_address.value|default:'' }}</textarea>
+                    </label>
+                    <label>
+                        Notes
+                        <textarea name="note" rows="3">{{ checkout_form.note.value|default:'' }}</textarea>
+                    </label>
+                    <button class="button button-primary button-block" type="submit">Place order</button>
+                </form>
+            </div>
+        {% endif %}
+    </aside>
+</section>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}TechStore | Catalog{% endblock %}
+
+{% block content %}
+<section class="page-head">
+    <div>
+        <span class="eyebrow">Catalog</span>
+        <h1>Browse products without the clutter.</h1>
+        <p>Search quickly, filter by category, and move into product detail or cart.</p>
+    </div>
+</section>
+
+<section class="panel-section">
+    <div class="catalog-toolbar-panel">
+        <form class="catalog-search" method="get">
+            <input name="q" type="search" value="{{ query }}" placeholder="Search by product name, brand, or use case">
+            <button class="button button-primary" type="submit">Search</button>
+        </form>
+        <div class="catalog-summary-bar">
+            <span>{{ products|length }} products</span>
+            <span>{% if active_category %}Category: {{ active_category }}{% else %}All categories{% endif %}</span>
+        </div>
+        <div class="catalog-filter-row">
+            <a class="filter-chip {% if not active_category %}active{% endif %}" href="{% url 'catalog:product-list' %}">All</a>
+            {% for category in categories %}
+                <a class="filter-chip {% if active_category == category.slug %}active{% endif %}" href="{% url 'catalog:product-list' %}?category={{ category.slug }}{% if query %}&q={{ query }}{% endif %}">
+                    {{ category.name }}
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="panel-section">
+    <div class="product-grid">
+        {% for product in products %}
+            {% include "components/product_card.html" with product=product %}
+        {% empty %}
+            <div class="empty-state">
+                <h3>No products matched the current search.</h3>
+                <p>Try another keyword or clear the active category filter.</p>
+            </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

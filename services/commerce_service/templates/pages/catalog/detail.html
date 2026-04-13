@@ -1,0 +1,76 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}{{ product.name }} | TechStore{% endblock %}
+
+{% block content %}
+<section class="page-head">
+    <div>
+        <span class="eyebrow">Product detail</span>
+        <h1>{{ product.name }}</h1>
+        <p>{{ product.short_description }}</p>
+    </div>
+    <div class="page-head-actions">
+        <a class="button button-secondary" href="{% url 'catalog:product-list' %}">Back to catalog</a>
+    </div>
+</section>
+
+<section class="detail-panel">
+    <div class="detail-visual" style="background: linear-gradient(135deg, {{ product.accent_color }}, #ffffff);">
+        <div class="detail-visual-head">
+            <span class="pill">{{ product.category.name }}</span>
+            <span class="status-badge {% if product.is_in_stock %}success{% else %}warning{% endif %}">
+                {% if product.is_in_stock %}In stock{% else %}Out of stock{% endif %}
+            </span>
+        </div>
+        <div class="detail-visual-copy">
+            <p>{{ product.brand }}</p>
+            <strong>${{ product.price }}</strong>
+        </div>
+    </div>
+    <div class="detail-info-panel">
+        <div class="detail-stack">
+            <h2>{{ product.name }}</h2>
+            <p>{{ product.description }}</p>
+        </div>
+        <div class="detail-specs">
+            <div class="spec-card">
+                <span>Brand</span>
+                <strong>{{ product.brand }}</strong>
+            </div>
+            <div class="spec-card">
+                <span>Status</span>
+                <strong>{{ product.get_status_display }}</strong>
+            </div>
+            <div class="spec-card">
+                <span>Stock</span>
+                <strong>{{ product.stock_quantity }}</strong>
+            </div>
+        </div>
+        <div class="detail-actions">
+            <form action="{% url 'cart:add' product.id %}" method="post">
+                {% csrf_token %}
+                <button class="button button-primary button-block" type="submit">Add to cart</button>
+            </form>
+            <a class="button button-secondary button-block" href="{% url 'cart:detail' %}">Open cart</a>
+        </div>
+    </div>
+</section>
+
+<section class="panel-section">
+    <div class="section-head">
+        <div>
+            <span class="eyebrow">Related products</span>
+            <h2>Same category, same layout language</h2>
+        </div>
+    </div>
+    <div class="product-grid">
+        {% for product in related_products %}
+            {% include "components/product_card.html" with product=product %}
+        {% empty %}
+            <div class="empty-state">
+                <h3>No related products available.</h3>
+            </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

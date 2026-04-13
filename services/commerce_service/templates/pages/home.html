@@ -1,0 +1,80 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}TechStore | Home{% endblock %}
+
+{% block content %}
+<section class="page-head">
+    <div>
+        <span class="eyebrow">Storefront</span>
+        <h1>Clean commerce for modern devices.</h1>
+        <p>Browse products, add items to cart, and complete checkout in one coherent flow.</p>
+    </div>
+    <div class="page-head-actions">
+        <a class="button button-primary" href="{% url 'catalog:product-list' %}">Browse catalog</a>
+        <a class="button button-secondary" href="/gateway/">Open gateway</a>
+    </div>
+</section>
+
+<section class="hero-panel">
+    <div class="hero-copy">
+        <span class="pill">DDD + Microservices</span>
+        <h2>One shell, one visual system, and service-aligned commerce.</h2>
+        <p>The storefront now follows a quieter dashboard language with cleaner spacing and calmer cards.</p>
+        <div class="hero-metrics">
+            <div class="metric-card">
+                <strong>{{ featured_products|length }}</strong>
+                <span>Featured items</span>
+            </div>
+            <div class="metric-card">
+                <strong>{{ categories|length }}</strong>
+                <span>Main categories</span>
+            </div>
+            <div class="metric-card">
+                <strong>5</strong>
+                <span>Business services</span>
+            </div>
+        </div>
+    </div>
+    <div class="hero-preview-grid">
+        {% for product in featured_products %}
+            <article class="preview-card">
+                <span>{{ product.category.name }}</span>
+                <strong>{{ product.name }}</strong>
+                <p>{{ product.brand }}</p>
+            </article>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="panel-section">
+    <div class="section-head">
+        <div>
+            <span class="eyebrow">Categories</span>
+            <h2>Start from focused product groups</h2>
+        </div>
+    </div>
+    <div class="category-grid">
+        {% for category in categories %}
+            <a class="category-card" href="{% url 'catalog:product-list' %}?category={{ category.slug }}">
+                <strong>{{ category.name }}</strong>
+                <p>{{ category.description|default:"Curated devices and accessories for daily use." }}</p>
+            </a>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="panel-section">
+    <div class="section-head">
+        <div>
+            <span class="eyebrow">Featured products</span>
+            <h2>Selected items ready for checkout</h2>
+        </div>
+        <a class="button button-secondary" href="{% url 'catalog:product-list' %}">See all</a>
+    </div>
+    <div class="product-grid">
+        {% for product in latest_products %}
+            {% include "components/product_card.html" with product=product %}
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
