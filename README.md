@@ -80,6 +80,17 @@ Once the stack is running, the current recommended smoke path is:
 
 The storefront currently prioritizes the non-AI commerce flow. The AI service can remain idle while testing the rest of the project.
 
+## Run the gateway smoke test
+
+The repository also includes a gateway-level smoke test for the core commerce contract:
+
+```bash
+cd services/api_gateway
+python3 -m unittest discover -s tests
+```
+
+This test exercises the `browse -> cart -> checkout -> payment -> shipping` path through the API Gateway with stateful upstream stubs, so it can be run quickly before moving on to heavier AI work.
+
 ## Run services locally
 
 ### Commerce service
