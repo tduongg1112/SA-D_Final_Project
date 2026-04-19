@@ -2,9 +2,6 @@ from decimal import Decimal
 
 from django.db import models
 
-from apps.catalog.models import Product
-
-
 class Cart(models.Model):
     session_key = models.CharField(max_length=64, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -18,7 +15,7 @@ class Cart(models.Model):
 
     @property
     def subtotal(self):
-        return sum((item.line_total for item in self.items.select_related("product")), Decimal("0.00"))
+        return sum((item.line_total for item in self.items.all()), Decimal("0.00"))
 
     @property
     def item_count(self):
@@ -35,17 +32,24 @@ class Cart(models.Model):
 
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, related_name="items", on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, related_name="cart_items", on_delete=models.CASCADE)
+    product_id = models.PositiveBigIntegerField()
+    product_slug = models.SlugField(max_length=180)
+    product_name = models.CharField(max_length=180)
+    category_name = models.CharField(max_length=120)
+    brand = models.CharField(max_length=120)
+    short_description = models.CharField(max_length=255)
+    accent_color = models.CharField(max_length=7, default="#EEF4FF")
+    unit_price = models.DecimalField(max_digits=12, decimal_places=2)
     quantity = models.PositiveIntegerField(default=1)
 
     class Meta:
-        unique_together = ("cart", "product")
+        unique_together = ("cart", "product_id")
 
     def __str__(self):
-        return f"{self.product.name} x {self.quantity}"
+        return f"{self.product_name} x {self.quantity}"
 
     @property
     def line_total(self):
-        return self.product.price * self.quantity
+        return self.unit_price * self.quantity
 
 # Create your models here.

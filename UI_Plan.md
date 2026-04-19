@@ -1,4 +1,4 @@
-# UI Plan: TechStore Visual System
+# UI Plan: NovaMarket Visual System
 
 ## 1. Single visual direction
 
@@ -139,7 +139,7 @@ Sidebar sections:
 Primary nav items:
 
 - Home
-- Catalog
+- Products
 - Cart
 - Dashboard
 - Gateway
@@ -173,7 +173,7 @@ Structure:
 - category grid
 - featured products grid
 
-### Catalog
+### Products
 
 Purpose:
 

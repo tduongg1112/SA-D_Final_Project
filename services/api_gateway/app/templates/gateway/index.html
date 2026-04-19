@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>TechStore Gateway</title>
+    <title>NovaMarket Gateway</title>
     <link rel="stylesheet" href="/gateway/static/gateway.css">
 </head>
 <body>
@@ -11,7 +11,7 @@
         <section class="hero-card">
             <div>
                 <p class="eyebrow">API Gateway</p>
-                <h1>TechStore service edge and traffic control plane</h1>
+                <h1>NovaMarket service edge and traffic control plane</h1>
                 <p class="hero-copy">
                     This gateway is the single public entry point for the storefront, internal business APIs,
                     and AI assistant routes. It exposes health information, service visibility, and routing logic
@@ -86,9 +86,14 @@
                         <td>Storefront UI</td>
                     </tr>
                     <tr>
+                        <td>/api/products/*</td>
+                        <td>product-service</td>
+                        <td>Product APIs</td>
+                    </tr>
+                    <tr>
                         <td>/api/catalog/*</td>
-                        <td>catalog-service</td>
-                        <td>Catalog APIs</td>
+                        <td>product-service</td>
+                        <td>Compatibility alias for legacy catalog paths</td>
                     </tr>
                     <tr>
                         <td>/api/cart/*</td>

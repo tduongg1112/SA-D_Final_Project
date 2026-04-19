@@ -10,7 +10,7 @@ from app.config import settings
 from app.proxy import proxy_request, service_health
 from app.service_registry import LIVE_SERVICES, TARGET_SERVICE_MAP
 
-app = FastAPI(title="TechStore API Gateway")
+app = FastAPI(title="NovaMarket API Gateway")
 app.mount("/gateway/static", StaticFiles(directory="app/static"), name="gateway-static")
 templates = Jinja2Templates(directory="app/templates")
 
@@ -34,7 +34,7 @@ async def health():
 async def aggregated_health():
     checks = {
         "commerce-service": await service_health(settings.commerce_service_url),
-        "catalog-service": await service_health(settings.catalog_service_url),
+        "product-service": await service_health(settings.product_service_url),
         "cart-service": await service_health(settings.cart_service_url),
         "ordering-service": await service_health(settings.ordering_service_url),
         "payment-service": await service_health(settings.payment_service_url),
@@ -71,9 +71,14 @@ async def gateway_dashboard(request: Request):
     )
 
 
+@app.api_route("/api/products/{path:path}", methods=["GET", "POST", "PUT", "PATCH", "DELETE"])
+async def gateway_products_proxy(request: Request, path: str):
+    return await proxy_request(request, settings.product_service_url, f"/api/products/{path}")
+
+
 @app.api_route("/api/catalog/{path:path}", methods=["GET", "POST", "PUT", "PATCH", "DELETE"])
 async def gateway_catalog_proxy(request: Request, path: str):
-    return await proxy_request(request, settings.catalog_service_url, f"/api/catalog/{path}")
+    return await proxy_request(request, settings.product_service_url, f"/api/catalog/{path}")
 
 
 @app.api_route("/api/cart/{path:path}", methods=["GET", "POST", "PUT", "PATCH", "DELETE"])

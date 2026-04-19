@@ -1,6 +1,6 @@
 {% extends "layouts/base.html" %}
 
-{% block title %}{{ product.name }} | TechStore{% endblock %}
+{% block title %}{{ product.name }} | NovaMarket{% endblock %}
 
 {% block content %}
 <section class="page-head">
@@ -10,7 +10,7 @@
         <p>{{ product.short_description }}</p>
     </div>
     <div class="page-head-actions">
-        <a class="button button-secondary" href="{% url 'catalog:product-list' %}">Back to catalog</a>
+        <a class="button button-secondary" href="{% url 'catalog:product-list' %}">Back to products</a>
     </div>
 </section>
 
@@ -39,7 +39,7 @@
             </div>
             <div class="spec-card">
                 <span>Status</span>
-                <strong>{{ product.get_status_display }}</strong>
+                <strong>{{ product.status_label }}</strong>
             </div>
             <div class="spec-card">
                 <span>Stock</span>

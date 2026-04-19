@@ -3,7 +3,7 @@ from pydantic import BaseModel
 
 from knowledge_base import PRODUCT_KNOWLEDGE
 
-app = FastAPI(title="TechStore AI Service")
+app = FastAPI(title="NovaMarket AI Service")
 
 
 class ChatRequest(BaseModel):

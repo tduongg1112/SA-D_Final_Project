@@ -11,6 +11,7 @@ urlpatterns = [
     path("cart/", include("apps.cart.urls")),
     path("orders/", include("apps.ordering.urls")),
     path("dashboard/", include("apps.dashboard.urls")),
+    path("api/products/", include("apps.catalog.api_urls")),
     path("api/catalog/", include("apps.catalog.api_urls")),
     path("api/cart/", include("apps.cart.api_urls")),
     path("api/orders/", include("apps.ordering.api_urls")),
@@ -22,6 +23,6 @@ urlpatterns = [
     path("logout/", auth_views.LogoutView.as_view(), name="logout"),
 ]
 
-admin.site.site_header = "TechStore Administration"
-admin.site.site_title = "TechStore Admin"
+admin.site.site_header = "NovaMarket Administration"
+admin.site.site_title = "NovaMarket Admin"
 admin.site.index_title = "System administration"

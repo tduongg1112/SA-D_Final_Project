@@ -1,14 +1,14 @@
-# DDD Analysis: TechStore E-commerce
+# DDD Analysis: NovaMarket Multi-category E-commerce
 
 ## Goal
 
-This document formalizes the domain decomposition for `TechStore` while the codebase is being split into increasingly independent microservices.
+This document formalizes the domain decomposition for `NovaMarket` while the codebase is being split into increasingly independent microservices.
 
 The main objective is to make service boundaries defensible from a Domain-Driven Design perspective, not from a purely technical or UI-driven perspective.
 
 ## Core domain
 
-The core business capability of `TechStore` is:
+The core business capability of `NovaMarket` is:
 
 - discovering products,
 - selecting the right products,
@@ -22,7 +22,7 @@ The core domain is therefore not "website pages" or "product types". It is the e
 
 ### Core subdomains
 
-- `Catalog`
+- `Product`
   - owns product discovery and product information
   - drives search, listing, detail views, featured products
 
@@ -84,7 +84,7 @@ Boundaries:
 - does not own products
 - provides identity claims to other services
 
-## 2. Catalog Context
+## 2. Product Context
 
 Responsibilities:
 
@@ -202,16 +202,16 @@ Boundaries:
 
 ### Upstream / downstream relationships
 
-- `Catalog` -> upstream to `Cart`, `Ordering`, `AI Assistant`
+- `Product` -> upstream to `Cart`, `Ordering`, `AI Assistant`
 - `Cart` -> upstream to `Ordering`
 - `Ordering` -> upstream to `Payment`, `Shipping`
 - `Identity` -> upstream to `Dashboard`, `Ordering`, `Gateway`
-- `AI Assistant` -> downstream from `Catalog`
+- `AI Assistant` -> downstream from `Product`
 - `Gateway` -> edge layer in front of all public service interactions
 
 ### Relationship summary
 
-- `Catalog` provides canonical product read models.
+- `Product` provides canonical product read models.
 - `Cart` consumes catalog references but owns only cart state.
 - `Ordering` consumes cart output and creates immutable order line snapshots.
 - `Payment` and `Shipping` attach operational states to an order.
@@ -222,7 +222,7 @@ Boundaries:
 The target microservice mapping is:
 
 - `identity-service`
-- `catalog-service`
+- `product-service`
 - `cart-service`
 - `ordering-service`
 - `payment-service`
@@ -233,10 +233,10 @@ The target microservice mapping is:
 
 ## Practical implementation note
 
-The current codebase already exposes `catalog-service`, `cart-service`, `ordering-service`, `payment-service`, `shipping-service`, `ai-service`, and `api-gateway`, while the storefront experience still lives in a consolidated Django runtime.
+The current codebase already exposes `product-service`, `cart-service`, `ordering-service`, `payment-service`, `shipping-service`, `ai-service`, and `api-gateway`, while the storefront experience still lives in a consolidated Django runtime.
 
 This means:
 
 - the code can keep moving now,
 - the report can describe the real decomposition already visible in runtime,
-- and remaining shared-database coupling can be reduced service-by-service without redesigning the domain from scratch.
+- and the current implementation now enforces database-per-service boundaries without redesigning the domain from scratch.

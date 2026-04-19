@@ -2,6 +2,7 @@ import os
 
 import httpx
 
+PRODUCT_SERVICE_URL = os.getenv("PRODUCT_SERVICE_URL", "").rstrip("/")
 CART_SERVICE_URL = os.getenv("CART_SERVICE_URL", "").rstrip("/")
 ORDERING_SERVICE_URL = os.getenv("ORDERING_SERVICE_URL", "").rstrip("/")
 PAYMENT_SERVICE_URL = os.getenv("PAYMENT_SERVICE_URL", "").rstrip("/")
@@ -16,14 +17,37 @@ def get_session_key(request):
     return request.session.session_key
 
 
-def _request(method, base_url, path, *, request=None, json=None, timeout=10.0):
+def _request(method, base_url, path, *, request=None, json=None, params=None, timeout=10.0):
     headers = {}
     if request is not None:
         headers["X-Session-Key"] = get_session_key(request)
     with httpx.Client(timeout=timeout) as client:
-        response = client.request(method=method, url=f"{base_url}{path}", json=json, headers=headers)
+        response = client.request(method=method, url=f"{base_url}{path}", json=json, params=params, headers=headers)
     response.raise_for_status()
     return response.json()
+
+
+def fetch_products(*, query="", category=""):
+    if not PRODUCT_SERVICE_URL:
+        return None
+    params = {}
+    if query:
+        params["q"] = query
+    if category:
+        params["category"] = category
+    try:
+        return _request("GET", PRODUCT_SERVICE_URL, "/api/products/", params=params or None)
+    except httpx.HTTPError:
+        return None
+
+
+def fetch_product(slug):
+    if not PRODUCT_SERVICE_URL:
+        return None
+    try:
+        return _request("GET", PRODUCT_SERVICE_URL, f"/api/products/{slug}/")
+    except httpx.HTTPError:
+        return None
 
 
 def fetch_cart(request):
@@ -115,5 +139,14 @@ def fetch_shipments():
         return None
     try:
         return _request("GET", SHIPPING_SERVICE_URL, "/api/shipping/")
+    except httpx.HTTPError:
+        return None
+
+
+def create_order(payload):
+    if not ORDERING_SERVICE_URL:
+        return None
+    try:
+        return _request("POST", ORDERING_SERVICE_URL, "/api/orders/checkout/", json=payload, timeout=20.0)
     except httpx.HTTPError:
         return None

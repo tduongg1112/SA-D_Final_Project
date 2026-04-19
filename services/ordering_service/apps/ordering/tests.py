@@ -46,6 +46,7 @@ class OrderingTests(TestCase):
                 "note": "Leave at reception",
                 "items": [
                     {
+                        "product_id": 10,
                         "product_name": "QuietPods Studio",
                         "unit_price": "2.90",
                         "quantity": 1,

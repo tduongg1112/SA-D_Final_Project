@@ -1,12 +1,31 @@
 import json
+import os
 
+import httpx
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 
 from apps.cart.models import CartItem
 from apps.cart.utils import get_or_create_cart
-from apps.catalog.models import Product
+
+PRODUCT_SERVICE_URL = os.getenv("PRODUCT_SERVICE_URL", "").rstrip("/")
+
+
+def fetch_product_snapshot(product_id):
+    if not PRODUCT_SERVICE_URL:
+        return None
+
+    try:
+        response = httpx.get(f"{PRODUCT_SERVICE_URL}/api/products/id/{product_id}/", timeout=5.0)
+        response.raise_for_status()
+    except httpx.HTTPStatusError as exc:
+        if exc.response.status_code == 404:
+            return False
+        return None
+    except httpx.HTTPError:
+        return None
+    return response.json()
 
 
 def resolve_cart(request):
@@ -28,17 +47,17 @@ def serialize_cart(cart):
             {
                 "id": item.id,
                 "product_id": item.product_id,
-                "product": item.product.name,
-                "product_slug": item.product.slug,
-                "category": item.product.category.name,
-                "brand": item.product.brand,
-                "short_description": item.product.short_description,
-                "accent_color": item.product.accent_color,
+                "product": item.product_name,
+                "product_slug": item.product_slug,
+                "category": item.category_name,
+                "brand": item.brand,
+                "short_description": item.short_description,
+                "accent_color": item.accent_color,
                 "quantity": item.quantity,
-                "price": str(item.product.price),
+                "price": str(item.unit_price),
                 "line_total": str(item.line_total),
             }
-            for item in cart.items.select_related("product")
+            for item in cart.items.all()
         ],
     }
 
@@ -67,9 +86,34 @@ def add_item_api(request):
         return JsonResponse({"detail": "Invalid JSON payload."}, status=400)
 
     cart = resolve_cart(request)
-    product = get_object_or_404(Product, pk=payload.get("product_id"), status=Product.Status.ACTIVE)
+    product_id = int(payload.get("product_id", 0))
+    product = fetch_product_snapshot(product_id)
+    if product is False:
+        return JsonResponse({"detail": "Product not found."}, status=404)
+    if product is None:
+        return JsonResponse({"detail": "Product service is unavailable."}, status=502)
+
     quantity = max(int(payload.get("quantity", 1)), 1)
-    cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
+    cart_item, created = CartItem.objects.get_or_create(
+        cart=cart,
+        product_id=product["id"],
+        defaults={
+            "product_slug": product["slug"],
+            "product_name": product["name"],
+            "category_name": product["category"]["name"],
+            "brand": product["brand"],
+            "short_description": product["short_description"],
+            "accent_color": product["accent_color"],
+            "unit_price": product["price"],
+        },
+    )
+    cart_item.product_slug = product["slug"]
+    cart_item.product_name = product["name"]
+    cart_item.category_name = product["category"]["name"]
+    cart_item.brand = product["brand"]
+    cart_item.short_description = product["short_description"]
+    cart_item.accent_color = product["accent_color"]
+    cart_item.unit_price = product["price"]
     if created:
         cart_item.quantity = quantity
     else:
@@ -88,7 +132,7 @@ def update_item_api(request, item_id):
         return JsonResponse({"detail": "Invalid JSON payload."}, status=400)
 
     cart = resolve_cart(request)
-    item = get_object_or_404(CartItem.objects.select_related("product"), pk=item_id, cart=cart)
+    item = get_object_or_404(CartItem, pk=item_id, cart=cart)
     item.quantity = max(int(payload.get("quantity", 1)), 1)
     item.save(update_fields=["quantity"])
     return JsonResponse(serialize_cart(cart))

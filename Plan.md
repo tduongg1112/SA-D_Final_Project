@@ -1,8 +1,8 @@
-# Plan Triển Khai Tiểu Luận: TechStore E-commerce theo DDD + AI + API Gateway
+# Plan Triển Khai Tiểu Luận: NovaMarket Multi-category E-commerce theo DDD + AI + API Gateway
 
 ## 1. Mục tiêu tổng thể
 - Xây dựng một tiểu luận môn học có logic chặt chẽ từ `phân tích yêu cầu -> phân rã domain theo DDD -> thiết kế kiến trúc microservice -> thiết kế AI service -> hiện thực code`.
-- Giữ chủ đề `TechStore E-commerce` từ bài kiểm tra cũ, nhưng nâng cấp toàn bộ tư duy thiết kế theo hướng `DDD-first`, tránh chia service thuần theo kỹ thuật như trước.
+- Khởi đầu từ tinh thần bài `TechStore E-commerce` cũ, nhưng mở rộng thành hệ `multi-category e-commerce` với ít nhất `12 sản phẩm khác nhau`, đồng thời nâng cấp toàn bộ tư duy thiết kế theo hướng `DDD-first`.
 - Bám sát yêu cầu của giảng viên là sử dụng `Django` trong phần hiện thực, nhưng vẫn đảm bảo giao diện và trải nghiệm đủ hiện đại để demo tốt.
 - Bổ sung `API Gateway` như một thành phần kiến trúc bắt buộc, đóng vai trò cổng vào duy nhất nhận request và định tuyến tới đúng service/module.
 
@@ -33,8 +33,8 @@
 - `Identity & Access`
   - Quản lý tài khoản `Admin`, `Staff`, `Customer`.
   - Authentication, authorization, hồ sơ người dùng.
-- `Catalog`
-  - Product, Category, brand, specification, price, inventory snapshot.
+- `Product`
+  - Product, Category, brand, description, price, inventory snapshot.
   - Tìm kiếm, lọc, xem chi tiết sản phẩm.
 - `Cart`
   - Giỏ hàng của khách, thêm/xóa/cập nhật số lượng, tính tạm tính.
@@ -61,7 +61,7 @@
   - Dùng `API Gateway` dạng service có code riêng ở lớp biên.
   - Route dự kiến:
     - `/` hoặc `/app/` -> Django Web App.
-    - `/api/catalog/` -> Catalog module/service.
+    - `/api/products/` -> Product module/service.
     - `/api/cart/` -> Cart module/service.
     - `/api/orders/` -> Ordering module/service.
     - `/api/payments/` -> Payment module/service.
@@ -101,7 +101,7 @@
 
 ### Phase 2. Phân tích domain theo DDD
 - Đầu ra:
-  - Xác định bounded contexts của hệ `TechStore`.
+  - Xác định bounded contexts của hệ `NovaMarket`.
   - Xác định aggregate, entity, value object ở mức đủ dùng.
   - Vẽ hoặc mô tả context map.
 - Trọng tâm:
@@ -146,7 +146,7 @@
 ### Phase 6. Implement core nghiệp vụ
 - Thứ tự triển khai:
   1. `Identity & Access`
-  2. `Catalog`
+  2. `Product`
   3. `Cart`
   4. `Ordering`
   5. `Payment`
@@ -195,7 +195,7 @@
 - Giao diện phải đủ sạch, dễ nhìn, không mang cảm giác demo sơ sài.
 
 ## 8. Ghi chú về bài kiểm tra cũ
-- `Kiemtra1_Overview.md` chỉ được dùng như tài liệu tham khảo để giữ tinh thần `TechStore + AI`.
+- `Kiemtra1_Overview.md` chỉ được dùng như tài liệu tham khảo để giữ tinh thần bài cũ, không ràng buộc phạm vi sản phẩm của bản hiện tại.
 - Không kế thừa nguyên trạng cách chia service cũ.
 - Bản tiểu luận này phải được xem là một phiên bản nâng cấp:
   - đúng hơn về DDD,
@@ -205,19 +205,20 @@
 
 ## 9. Trạng thái triển khai hiện tại
 - `Phase 1` đến `Phase 5`: đã hoàn thành ở mức triển khai thực tế.
-- `Phase 6`: đang hoạt động cho flow chính `catalog -> cart -> checkout -> payment -> shipping`.
+- `Phase 6`: đang hoạt động cho flow chính `product -> cart -> checkout -> payment -> shipping`.
 - `Phase 7`: tạm hoãn phần AI theo quyết định hiện tại.
 - `Phase 8`: đang trong giai đoạn hoàn thiện UI, kiểm thử, và siết lại trải nghiệm demo.
 
 ### Những phần đã chạy được
 - `API Gateway` có service riêng, routing riêng, health check tổng hợp, và giao diện gateway riêng.
 - Các bounded contexts chính đã được tách thành các service độc lập:
-  - `catalog-service`
+  - `product-service`
   - `cart-service`
   - `ordering-service`
   - `payment-service`
   - `shipping-service`
   - `commerce-service`
+- Dữ liệu demo đã được mở rộng theo hướng `multi-category marketplace` với `12 sản phẩm` thuộc nhiều nhóm hàng khác nhau.
 - Login qua gateway đã hoạt động ổn.
 - Add-to-cart qua gateway đã hoạt động ổn.
 - Checkout qua gateway đã tạo order và clear cart thành công.

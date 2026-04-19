@@ -2,16 +2,18 @@ services:
   db:
     image: postgres:16
     environment:
-      POSTGRES_DB: techstore
+      POSTGRES_DB: commerce_service
       POSTGRES_USER: techstore
       POSTGRES_PASSWORD: techstore
+      POSTGRES_MULTIPLE_DATABASES: product_service,cart_service,ordering_service,payment_service,shipping_service
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U techstore -d techstore"]
+      test: ["CMD-SHELL", "pg_isready -U techstore -d commerce_service"]
       interval: 5s
       timeout: 5s
       retries: 10
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./infra/postgres/init-multiple-dbs.sh:/docker-entrypoint-initdb.d/init-multiple-dbs.sh:ro
     ports:
       - "5432:5432"
 
@@ -25,13 +27,14 @@ services:
              python manage.py runserver 0.0.0.0:8000 --noreload"
     environment:
       DJANGO_DEBUG: "1"
-      DJANGO_ALLOWED_HOSTS: "localhost,127.0.0.1,commerce-service,catalog-service,cart-service,ordering-service,payment-service,shipping-service"
+      DJANGO_ALLOWED_HOSTS: "localhost,127.0.0.1,commerce-service,product-service,cart-service,ordering-service,payment-service,shipping-service"
       DJANGO_CSRF_TRUSTED_ORIGINS: "http://localhost:8080,http://127.0.0.1:8080,http://localhost:8000,http://127.0.0.1:8000"
+      PRODUCT_SERVICE_URL: http://product-service:8010
       CART_SERVICE_URL: http://cart-service:8030
       ORDERING_SERVICE_URL: http://ordering-service:8020
       PAYMENT_SERVICE_URL: http://payment-service:8040
       SHIPPING_SERVICE_URL: http://shipping-service:8050
-      POSTGRES_DB: techstore
+      POSTGRES_DB: commerce_service
       POSTGRES_USER: techstore
       POSTGRES_PASSWORD: techstore
       POSTGRES_HOST: db
@@ -54,44 +57,42 @@ services:
     ports:
       - "8001:8001"
 
-  catalog-service:
+  product-service:
     build:
-      context: ./services/catalog_service
+      context: ./services/product_service
     working_dir: /app
     command: >
-      sh -c "until python manage.py migrate --check >/dev/null 2>&1;
-             do echo 'Waiting for commerce schema...'; sleep 2; done;
+      sh -c "python manage.py migrate &&
+             python manage.py seed_demo &&
              python manage.py runserver 0.0.0.0:8010 --noreload"
     environment:
       DJANGO_DEBUG: "1"
-      DJANGO_ALLOWED_HOSTS: "localhost,127.0.0.1,commerce-service,catalog-service,cart-service,ordering-service,payment-service,shipping-service"
-      POSTGRES_DB: techstore
+      DJANGO_ALLOWED_HOSTS: "localhost,127.0.0.1,commerce-service,product-service,cart-service,ordering-service,payment-service,shipping-service"
+      POSTGRES_DB: product_service
       POSTGRES_USER: techstore
       POSTGRES_PASSWORD: techstore
       POSTGRES_HOST: db
       POSTGRES_PORT: "5432"
     volumes:
-      - ./services/catalog_service:/app
+      - ./services/product_service:/app
     ports:
       - "8010:8010"
     depends_on:
       db:
         condition: service_healthy
-      commerce-service:
-        condition: service_started
 
   cart-service:
     build:
       context: ./services/cart_service
     working_dir: /app
     command: >
-      sh -c "until python manage.py migrate --check >/dev/null 2>&1;
-             do echo 'Waiting for commerce schema...'; sleep 2; done;
+      sh -c "python manage.py migrate &&
              python manage.py runserver 0.0.0.0:8030 --noreload"
     environment:
       DJANGO_DEBUG: "1"
-      DJANGO_ALLOWED_HOSTS: "localhost,127.0.0.1,commerce-service,catalog-service,cart-service,ordering-service,payment-service,shipping-service"
-      POSTGRES_DB: techstore
+      DJANGO_ALLOWED_HOSTS: "localhost,127.0.0.1,commerce-service,product-service,cart-service,ordering-service,payment-service,shipping-service"
+      PRODUCT_SERVICE_URL: http://product-service:8010
+      POSTGRES_DB: cart_service
       POSTGRES_USER: techstore
       POSTGRES_PASSWORD: techstore
       POSTGRES_HOST: db
@@ -103,7 +104,7 @@ services:
     depends_on:
       db:
         condition: service_healthy
-      commerce-service:
+      product-service:
         condition: service_started
 
   ordering-service:
@@ -111,15 +112,15 @@ services:
       context: ./services/ordering_service
     working_dir: /app
     command: >
-      sh -c "until python manage.py migrate --check >/dev/null 2>&1;
-             do echo 'Waiting for commerce schema...'; sleep 2; done;
+      sh -c "python manage.py migrate &&
              python manage.py runserver 0.0.0.0:8020 --noreload"
     environment:
       DJANGO_DEBUG: "1"
-      DJANGO_ALLOWED_HOSTS: "localhost,127.0.0.1,commerce-service,catalog-service,cart-service,ordering-service,payment-service,shipping-service"
+      DJANGO_ALLOWED_HOSTS: "localhost,127.0.0.1,commerce-service,product-service,cart-service,ordering-service,payment-service,shipping-service"
+      PRODUCT_SERVICE_URL: http://product-service:8010
       PAYMENT_SERVICE_URL: http://payment-service:8040
       SHIPPING_SERVICE_URL: http://shipping-service:8050
-      POSTGRES_DB: techstore
+      POSTGRES_DB: ordering_service
       POSTGRES_USER: techstore
       POSTGRES_PASSWORD: techstore
       POSTGRES_HOST: db
@@ -131,7 +132,7 @@ services:
     depends_on:
       db:
         condition: service_healthy
-      commerce-service:
+      product-service:
         condition: service_started
       payment-service:
         condition: service_started
@@ -147,8 +148,8 @@ services:
              python manage.py runserver 0.0.0.0:8040 --noreload"
     environment:
       DJANGO_DEBUG: "1"
-      DJANGO_ALLOWED_HOSTS: "localhost,127.0.0.1,commerce-service,catalog-service,cart-service,ordering-service,payment-service,shipping-service"
-      POSTGRES_DB: techstore
+      DJANGO_ALLOWED_HOSTS: "localhost,127.0.0.1,commerce-service,product-service,cart-service,ordering-service,payment-service,shipping-service"
+      POSTGRES_DB: payment_service
       POSTGRES_USER: techstore
       POSTGRES_PASSWORD: techstore
       POSTGRES_HOST: db
@@ -170,8 +171,8 @@ services:
              python manage.py runserver 0.0.0.0:8050 --noreload"
     environment:
       DJANGO_DEBUG: "1"
-      DJANGO_ALLOWED_HOSTS: "localhost,127.0.0.1,commerce-service,catalog-service,cart-service,ordering-service,payment-service,shipping-service"
-      POSTGRES_DB: techstore
+      DJANGO_ALLOWED_HOSTS: "localhost,127.0.0.1,commerce-service,product-service,cart-service,ordering-service,payment-service,shipping-service"
+      POSTGRES_DB: shipping_service
       POSTGRES_USER: techstore
       POSTGRES_PASSWORD: techstore
       POSTGRES_HOST: db
@@ -191,7 +192,7 @@ services:
     command: uvicorn app.main:app --host 0.0.0.0 --port 8080
     environment:
       COMMERCE_SERVICE_URL: http://commerce-service:8000
-      CATALOG_SERVICE_URL: http://catalog-service:8010
+      PRODUCT_SERVICE_URL: http://product-service:8010
       CART_SERVICE_URL: http://cart-service:8030
       ORDERING_SERVICE_URL: http://ordering-service:8020
       PAYMENT_SERVICE_URL: http://payment-service:8040
@@ -201,7 +202,7 @@ services:
       - "8080:8080"
     depends_on:
       - commerce-service
-      - catalog-service
+      - product-service
       - cart-service
       - ordering-service
       - payment-service

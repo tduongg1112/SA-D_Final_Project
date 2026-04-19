@@ -16,10 +16,10 @@ LIVE_SERVICES = [
         "status": "managed",
     },
     {
-        "name": "catalog-service",
+        "name": "product-service",
         "type": "business",
-        "base_url": settings.catalog_service_url,
-        "description": "Dedicated catalog runtime for product and category APIs.",
+        "base_url": settings.product_service_url,
+        "description": "Dedicated product runtime for product and category APIs.",
         "status": "managed",
     },
     {
@@ -61,7 +61,7 @@ LIVE_SERVICES = [
 
 TARGET_SERVICE_MAP = [
     "identity-service",
-    "catalog-service",
+    "product-service",
     "cart-service",
     "ordering-service",
     "payment-service",

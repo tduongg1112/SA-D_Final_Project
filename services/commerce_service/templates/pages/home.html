@@ -1,16 +1,16 @@
 {% extends "layouts/base.html" %}
 
-{% block title %}TechStore | Home{% endblock %}
+{% block title %}NovaMarket | Home{% endblock %}
 
 {% block content %}
 <section class="page-head">
     <div>
-        <span class="eyebrow">Storefront</span>
-        <h1>Clean commerce for modern devices.</h1>
-        <p>Browse products, add items to cart, and complete checkout in one coherent flow.</p>
+        <span class="eyebrow">Marketplace</span>
+        <h1>Clean commerce for everyday products.</h1>
+        <p>Browse across multiple categories, add items to cart, and complete checkout in one coherent flow.</p>
     </div>
     <div class="page-head-actions">
-        <a class="button button-primary" href="{% url 'catalog:product-list' %}">Browse catalog</a>
+        <a class="button button-primary" href="{% url 'catalog:product-list' %}">Browse products</a>
         <a class="button button-secondary" href="/gateway/">Open gateway</a>
     </div>
 </section>
@@ -18,8 +18,8 @@
 <section class="hero-panel">
     <div class="hero-copy">
         <span class="pill">DDD + Microservices</span>
-        <h2>One shell, one visual system, and service-aligned commerce.</h2>
-        <p>The storefront now follows a quieter dashboard language with cleaner spacing and calmer cards.</p>
+        <h2>One shell, one visual system, and service-aligned marketplace flow.</h2>
+        <p>The storefront now supports a broader multi-category assortment instead of a single tech-only catalog.</p>
         <div class="hero-metrics">
             <div class="metric-card">
                 <strong>{{ featured_products|length }}</strong>
@@ -27,7 +27,7 @@
             </div>
             <div class="metric-card">
                 <strong>{{ categories|length }}</strong>
-                <span>Main categories</span>
+                <span>Product groups</span>
             </div>
             <div class="metric-card">
                 <strong>5</strong>

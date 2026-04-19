@@ -1,23 +1,23 @@
-# TechStore Microservices Workspace
+# NovaMarket Microservices Workspace
 
-TechStore is being evolved into a microservices-oriented architecture for the course project.
+NovaMarket is being evolved into a microservices-oriented architecture for the course project.
 
 Current runtime services:
 
 - `commerce-service` for storefront UI and the remaining consolidated customer-facing flow
-- `catalog-service` for catalog APIs
+- `product-service` for product APIs
 - `cart-service` for cart APIs
 - `ordering-service` for order APIs and checkout orchestration
 - `payment-service` for payment APIs
 - `shipping-service` for shipment APIs
 - `ai-service` for recommendations and conversational shopping assistance
 - `api-gateway` for routing, health aggregation, and gateway UI
-- `postgres` for commerce persistence
+- `postgres` with one logical database per business service
 
 Repository structure:
 
 - `services/commerce_service`
-- `services/catalog_service`
+- `services/product_service`
 - `services/cart_service`
 - `services/ordering_service`
 - `services/payment_service`
@@ -40,12 +40,27 @@ docker compose down -v
 docker compose up --build
 ```
 
+Database topology inside Postgres:
+
+- `commerce_service`
+- `product_service`
+- `cart_service`
+- `ordering_service`
+- `payment_service`
+- `shipping_service`
+
+You can inspect the same Docker Postgres instance from DBeaver by connecting to `localhost:5432` with:
+
+- user: `techstore`
+- password: `techstore`
+- database: choose one of the service databases above
+
 Public entry points:
 
 - Storefront through API Gateway: `http://localhost:8080`
 - Gateway dashboard UI: `http://localhost:8080/gateway/`
 - Commerce service directly: `http://localhost:8000`
-- Catalog service directly: `http://localhost:8010/health`
+- Product service directly: `http://localhost:8010/health`
 - Ordering service directly: `http://localhost:8020/health`
 - Cart service directly: `http://localhost:8030/health`
 - Payment service directly: `http://localhost:8040/health`
@@ -57,7 +72,7 @@ Public entry points:
 Once the stack is running, the current recommended smoke path is:
 
 1. Open `http://localhost:8080`
-2. Browse the catalog and add one or two products to cart
+2. Browse the product catalog and add one or two products to cart
 3. Open `/cart/` and submit checkout
 4. Confirm the order success page shows payment and shipping state
 5. Sign in as `staff` and open `/dashboard/`
@@ -83,10 +98,10 @@ cd services/ai_service
 uvicorn main:app --reload --port 8001
 ```
 
-### Catalog service
+### Product service
 
 ```bash
-cd services/catalog_service
+cd services/product_service
 python3 manage.py runserver 0.0.0.0:8010
 ```
 

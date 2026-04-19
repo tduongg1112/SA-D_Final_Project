@@ -91,7 +91,7 @@ Diễn giải chi tiết:
   - Customer: duyệt sản phẩm, tìm kiếm, thêm giỏ hàng, đặt hàng và tương tác với AI.
 - Cần xác định rõ các domain nghiệp vụ:
   - User/Identity.
-  - Product/Catalog.
+  - Product.
   - Cart.
   - Order.
   - Payment.
@@ -205,7 +205,7 @@ Diễn giải chi tiết:
 ==================================================
 
 Chủ đề hệ thống:
-- Xây dựng hệ thống `TechStore E-commerce` bán các sản phẩm công nghệ.
+- Xây dựng hệ thống `multi-category E-commerce` với tối thiểu `12 mặt hàng khác nhau`, trong đó domain hàng hóa nên được trình bày theo tên `Product` hoặc `Product Service` thay vì chỉ thuần `Catalog`.
 
 Hướng công nghệ phù hợp:
 - `Django` làm nền tảng backend chính để bám sát yêu cầu môn học.
@@ -233,7 +233,7 @@ Hướng kiến trúc phù hợp:
 - Customer
 - Authentication và authorization cơ bản
 
-2. Catalog
+2. Product
 - Product
 - Category
 - Danh sách sản phẩm
@@ -306,7 +306,7 @@ Do đề bài scan không thể hiện rõ năm, cần hiểu đây là mốc đ
 
 Từ đề bài gốc có thể rút ra định hướng thực hiện hợp lý như sau:
 - Chương 1 dùng để xây dựng nền tảng lý thuyết và case study tham khảo.
-- Công việc chính bắt đầu từ Chương 2 với hệ `TechStore E-commerce`.
+- Công việc chính bắt đầu từ Chương 2 với hệ `multi-category E-commerce`.
 - Hệ thống cần được phân rã theo DDD.
 - Phải có `AI service`.
 - Phải có `API Gateway`.

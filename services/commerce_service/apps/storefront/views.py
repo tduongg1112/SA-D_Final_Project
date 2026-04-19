@@ -1,15 +1,14 @@
 from django.shortcuts import render
 
-from apps.catalog.models import Category, Product
+from config.service_clients import fetch_products
 
 
 def home(request):
-    featured_products = Product.objects.filter(
-        featured=True,
-        status=Product.Status.ACTIVE,
-    ).select_related("category")[:4]
-    categories = Category.objects.all()[:4]
-    latest_products = Product.objects.filter(status=Product.Status.ACTIVE).select_related("category")[:6]
+    payload = fetch_products() or {"items": [], "categories": []}
+    products = payload["items"]
+    featured_products = [product for product in products if product["featured"]][:4]
+    categories = payload["categories"][:6]
+    latest_products = products[:8]
     return render(
         request,
         "pages/home.html",

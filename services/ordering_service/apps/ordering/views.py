@@ -13,6 +13,7 @@ from apps.ordering.models import OrderItem
 SHIPPING_FEE = Decimal("5.00")
 PAYMENT_SERVICE_URL = os.getenv("PAYMENT_SERVICE_URL", "").rstrip("/")
 SHIPPING_SERVICE_URL = os.getenv("SHIPPING_SERVICE_URL", "").rstrip("/")
+PRODUCT_SERVICE_URL = os.getenv("PRODUCT_SERVICE_URL", "").rstrip("/")
 
 
 def create_payment_record(order):
@@ -59,6 +60,31 @@ def create_shipment_record(order):
     return response.json()
 
 
+def reserve_stock(items):
+    if not PRODUCT_SERVICE_URL:
+        return None
+
+    payload = {
+        "items": [
+            {
+                "product_id": int(item["product_id"]),
+                "quantity": int(item["quantity"]),
+            }
+            for item in items
+        ]
+    }
+
+    response = httpx.post(
+        f"{PRODUCT_SERVICE_URL}/api/products/stock/reserve/",
+        json=payload,
+        timeout=5.0,
+    )
+    if response.status_code == 409:
+        raise ValueError(response.json().get("detail", "Insufficient stock."))
+    response.raise_for_status()
+    return response.json()
+
+
 def fetch_payment_record(order_id):
     if not PAYMENT_SERVICE_URL:
         return None
@@ -102,6 +128,21 @@ def checkout_api(request):
             status=400,
         )
 
+    if PRODUCT_SERVICE_URL:
+        missing_product_ids = [index for index, item in enumerate(items) if not item.get("product_id")]
+        if missing_product_ids:
+            return JsonResponse(
+                {"detail": "Each checkout item must include product_id.", "indexes": missing_product_ids},
+                status=400,
+            )
+
+    try:
+        reserve_stock(items)
+    except ValueError as exc:
+        return JsonResponse({"detail": str(exc)}, status=409)
+    except httpx.HTTPError:
+        return JsonResponse({"detail": "Product service is unavailable."}, status=502)
+
     subtotal = sum((Decimal(str(item["line_total"])) for item in items), Decimal("0.00"))
     total = subtotal + SHIPPING_FEE
     order = Order.objects.create(
@@ -118,6 +159,7 @@ def checkout_api(request):
     for item in items:
         OrderItem.objects.create(
             order=order,
+            product_id=item.get("product_id"),
             product_name=item["product_name"],
             unit_price=Decimal(str(item["unit_price"])),
             quantity=int(item["quantity"]),
@@ -173,6 +215,7 @@ def order_detail_api(request, order_id):
             "tracking_code": shipment["tracking_code"] if shipment else None,
             "items": [
                 {
+                    "product_id": item.product_id,
                     "product_name": item.product_name,
                     "unit_price": str(item.unit_price),
                     "quantity": item.quantity,

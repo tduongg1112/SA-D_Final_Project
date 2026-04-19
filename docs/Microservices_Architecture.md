@@ -1,4 +1,4 @@
-# Microservices Architecture: TechStore
+# Microservices Architecture: NovaMarket
 
 ## Target structure
 
@@ -8,7 +8,7 @@ The target implementation follows a standard microservices layout:
 services/
   api_gateway/
   commerce_service/
-  catalog_service/
+  product_service/
   cart_service/
   ordering_service/
   payment_service/
@@ -30,13 +30,13 @@ Because of that, the public runtime shape is already service-oriented:
 
 - `api-gateway` is the single public entry point
 - `commerce-service` serves the storefront, cart flow, and remaining consolidated business logic
-- `catalog-service` serves catalog APIs
+- `product-service` serves product APIs
 - `cart-service` serves cart APIs
 - `ordering-service` serves order APIs
 - `payment-service` serves payment APIs
 - `shipping-service` serves shipment APIs
 - `ai-service` handles recommendation and conversational assistance
-- `db` stores the commerce state
+- `db` hosts isolated logical databases for each business service
 
 ## Service responsibilities
 
@@ -58,7 +58,8 @@ Public paths:
 - `/cart/*` -> proxied storefront routes
 - `/orders/*` -> proxied storefront routes
 - `/dashboard/*` -> proxied storefront routes
-- `/api/catalog/*` -> catalog-facing API exposed by catalog service
+- `/api/products/*` -> product-facing API exposed by product service
+- `/api/catalog/*` -> compatibility alias to the product service
 - `/api/cart/*` -> cart-facing API exposed by cart service
 - `/api/orders/*` -> ordering-facing API exposed by ordering service
 - `/api/payments/*` -> payment-facing API exposed by payment service
@@ -94,7 +95,7 @@ Notes:
 - It is independent from the commerce runtime.
 - It can evolve into a richer RAG or ML service without changing the public gateway contract.
 
-## 4. Catalog Service
+## 4. Product Service
 
 Responsibilities:
 
@@ -169,13 +170,13 @@ Future-compatible extension points:
 Browser
   -> API Gateway
       -> Commerce Service
-      -> Catalog Service
+      -> Product Service
       -> Cart Service
       -> Ordering Service
       -> Payment Service
       -> Shipping Service
       -> AI Service
-      -> Database
+      -> Postgres (db per service)
 ```
 
 ## Evolution path
@@ -183,7 +184,7 @@ Browser
 The next architectural evolution after the current phase is:
 
 1. move storefront cart state consumption fully behind `cart-service`
-2. reduce shared database coupling between extracted runtimes
+2. harden service contracts now that database-per-service isolation is in place
 3. introduce async events where transaction boundaries become cross-service
 4. extract identity and access into an independent runtime
 

@@ -1,28 +1,21 @@
-from django.db.models import Q
+from django.http import Http404
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import render
 
-from apps.catalog.models import Category, Product
+from config.service_clients import fetch_product
+from config.service_clients import fetch_products
 
 
 def product_list(request):
     query = request.GET.get("q", "").strip()
     category_slug = request.GET.get("category", "").strip()
-    products = Product.objects.filter(status=Product.Status.ACTIVE).select_related("category")
-    if query:
-        products = products.filter(
-            Q(name__icontains=query)
-            | Q(brand__icontains=query)
-            | Q(short_description__icontains=query)
-        )
-    if category_slug:
-        products = products.filter(category__slug=category_slug)
+    payload = fetch_products(query=query, category=category_slug) or {"items": [], "categories": []}
     return render(
         request,
         "pages/catalog/list.html",
         {
-            "products": products,
-            "categories": Category.objects.all(),
+            "products": payload["items"],
+            "categories": payload["categories"],
             "active_category": category_slug,
             "query": query,
         },
@@ -30,38 +23,21 @@ def product_list(request):
 
 
 def product_detail(request, slug):
-    product = get_object_or_404(
-        Product.objects.select_related("category"),
-        slug=slug,
-        status=Product.Status.ACTIVE,
-    )
-    related_products = Product.objects.filter(
-        category=product.category,
-        status=Product.Status.ACTIVE,
-    ).exclude(pk=product.pk)[:3]
+    payload = fetch_product(slug)
+    if payload is None:
+        raise Http404("Product is unavailable.")
     return render(
         request,
         "pages/catalog/detail.html",
         {
-            "product": product,
-            "related_products": related_products,
+            "product": payload["product"],
+            "related_products": payload["related_products"],
         },
     )
 
 
 def product_list_api(request):
-    products = Product.objects.filter(status=Product.Status.ACTIVE).select_related("category")
-    payload = [
-        {
-            "id": product.id,
-            "name": product.name,
-            "slug": product.slug,
-            "category": product.category.name,
-            "brand": product.brand,
-            "price": str(product.price),
-            "stock_quantity": product.stock_quantity,
-            "featured": product.featured,
-        }
-        for product in products
-    ]
-    return JsonResponse({"items": payload})
+    query = request.GET.get("q", "").strip()
+    category_slug = request.GET.get("category", "").strip()
+    payload = fetch_products(query=query, category=category_slug) or {"items": [], "categories": []}
+    return JsonResponse(payload)

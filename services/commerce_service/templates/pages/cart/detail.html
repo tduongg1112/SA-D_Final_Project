@@ -1,6 +1,6 @@
 {% extends "layouts/base.html" %}
 
-{% block title %}TechStore | Cart{% endblock %}
+{% block title %}NovaMarket | Cart{% endblock %}
 
 {% block content %}
 <section class="page-head">
@@ -28,7 +28,7 @@
                         <p>{{ item.short_description|default:"Configured for storefront testing." }}</p>
                     </div>
                     <div class="cart-card-meta">
-                        <span>{{ item.brand|default:"TechStore" }}</span>
+                        <span>{{ item.brand|default:"NovaMarket" }}</span>
                         <strong>${{ item.price }}</strong>
                     </div>
                     <div class="cart-card-actions">

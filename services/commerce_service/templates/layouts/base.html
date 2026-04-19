@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title %}TechStore{% endblock %}</title>
+    <title>{% block title %}NovaMarket{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/app.css' %}">
 </head>
 <body>
@@ -13,7 +13,7 @@
             <div class="sidebar-brand">
                 <a class="brand-mark" href="{% url 'storefront:home' %}">
                     <span class="brand-dot"></span>
-                    <span>TechStore</span>
+                    <span>NovaMarket</span>
                 </a>
                 <button class="sidebar-close" id="sidebar-close" type="button" aria-label="Close navigation">×</button>
             </div>
@@ -27,7 +27,7 @@
                     </a>
                     <a class="sidebar-link {% if '/products/' in request.path %}active{% endif %}" href="{% url 'catalog:product-list' %}">
                         <span class="sidebar-icon"></span>
-                        <span>Catalog</span>
+                        <span>Products</span>
                     </a>
                     <a class="sidebar-link {% if '/cart/' in request.path %}active{% endif %}" href="{% url 'cart:detail' %}">
                         <span class="sidebar-icon"></span>
@@ -53,7 +53,7 @@
                     </div>
                     <div class="sidebar-note-card">
                         <span class="sidebar-note-title">Flow</span>
-                        <p>Catalog, cart, checkout, payment, and shipping.</p>
+                        <p>Products, cart, checkout, payment, and shipping.</p>
                     </div>
                 </div>
             </div>
