@@ -33,6 +33,7 @@ async def health():
 @app.get("/gateway/health")
 async def aggregated_health():
     checks = {
+        "web-frontend": await service_health(settings.web_frontend_url, "/"),
         "commerce-service": await service_health(settings.commerce_service_url),
         "product-service": await service_health(settings.product_service_url),
         "cart-service": await service_health(settings.cart_service_url),
@@ -111,4 +112,4 @@ async def gateway_shipping_proxy(request: Request, path: str):
     methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"],
 )
 async def storefront_proxy(request: Request, path: str):
-    return await proxy_request(request, settings.commerce_service_url, path)
+    return await proxy_request(request, settings.web_frontend_url, path)

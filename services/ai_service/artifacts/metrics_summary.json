@@ -1,0 +1,41 @@
+{
+  "best_model": "RNN",
+  "metrics": {
+    "RNN": {
+      "accuracy": 1.0,
+      "loss": 0.022709760814905167,
+      "macro_precision": 1.0,
+      "macro_recall": 1.0,
+      "macro_f1": 1.0
+    },
+    "LSTM": {
+      "accuracy": 0.9599999785423279,
+      "loss": 0.0964973047375679,
+      "macro_precision": 0.9696969696969697,
+      "macro_recall": 0.9552042160737813,
+      "macro_f1": 0.9608465608465607
+    },
+    "biLSTM": {
+      "accuracy": 0.9733333587646484,
+      "loss": 0.07079557329416275,
+      "macro_precision": 0.9791666666666666,
+      "macro_recall": 0.9703557312252965,
+      "macro_f1": 0.9740879664360534
+    }
+  },
+  "feature_columns": [
+    "search_count",
+    "product_view_count",
+    "detail_view_count",
+    "dwell_time_sec",
+    "add_wishlist_count",
+    "add_to_cart_count",
+    "remove_from_cart_count",
+    "purchase_count"
+  ],
+  "classes": [
+    "high_intent",
+    "low_intent",
+    "medium_intent"
+  ]
+}

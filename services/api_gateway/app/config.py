@@ -5,6 +5,7 @@ import os
 @dataclass(frozen=True)
 class Settings:
     commerce_service_url: str = os.getenv("COMMERCE_SERVICE_URL", "http://commerce-service:8000")
+    web_frontend_url: str = os.getenv("WEB_FRONTEND_URL", "http://web-frontend:5173")
     product_service_url: str = os.getenv("PRODUCT_SERVICE_URL", "http://product-service:8010")
     cart_service_url: str = os.getenv("CART_SERVICE_URL", "http://cart-service:8030")
     ordering_service_url: str = os.getenv("ORDERING_SERVICE_URL", "http://ordering-service:8020")

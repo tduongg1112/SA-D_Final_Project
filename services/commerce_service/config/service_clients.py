@@ -1,6 +1,10 @@
 import os
 
 import httpx
+from config.product_media import enrich_cart_payload
+from config.product_media import enrich_order_detail_payload
+from config.product_media import enrich_product_detail_payload
+from config.product_media import enrich_product_listing
 
 PRODUCT_SERVICE_URL = os.getenv("PRODUCT_SERVICE_URL", "").rstrip("/")
 CART_SERVICE_URL = os.getenv("CART_SERVICE_URL", "").rstrip("/")
@@ -36,7 +40,7 @@ def fetch_products(*, query="", category=""):
     if category:
         params["category"] = category
     try:
-        return _request("GET", PRODUCT_SERVICE_URL, "/api/products/", params=params or None)
+        return enrich_product_listing(_request("GET", PRODUCT_SERVICE_URL, "/api/products/", params=params or None))
     except httpx.HTTPError:
         return None
 
@@ -45,7 +49,7 @@ def fetch_product(slug):
     if not PRODUCT_SERVICE_URL:
         return None
     try:
-        return _request("GET", PRODUCT_SERVICE_URL, f"/api/products/{slug}/")
+        return enrich_product_detail_payload(_request("GET", PRODUCT_SERVICE_URL, f"/api/products/{slug}/"))
     except httpx.HTTPError:
         return None
 
@@ -54,7 +58,7 @@ def fetch_cart(request):
     if not CART_SERVICE_URL:
         return None
     try:
-        return _request("GET", CART_SERVICE_URL, "/api/cart/", request=request)
+        return enrich_cart_payload(_request("GET", CART_SERVICE_URL, "/api/cart/", request=request))
     except httpx.HTTPError:
         return None
 
@@ -111,7 +115,7 @@ def fetch_order_detail(order_id):
     if not ORDERING_SERVICE_URL:
         return None
     try:
-        return _request("GET", ORDERING_SERVICE_URL, f"/api/orders/{order_id}/")
+        return enrich_order_detail_payload(_request("GET", ORDERING_SERVICE_URL, f"/api/orders/{order_id}/"))
     except httpx.HTTPError:
         return None
 

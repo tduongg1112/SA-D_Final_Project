@@ -52,10 +52,40 @@ services:
       context: ./services/ai_service
     working_dir: /app
     command: uvicorn main:app --host 0.0.0.0 --port 8001
+    environment:
+      PRODUCT_SERVICE_URL: http://product-service:8010
+      AI_MODEL_PATH: /app/artifacts/model_best.keras
+      AI_SCALER_PATH: /app/artifacts/scaler.pkl
+      AI_LABEL_ENCODER_PATH: /app/artifacts/label_encoder.pkl
+      AI_METRICS_PATH: /app/artifacts/metrics_summary.json
+      NEO4J_URI: bolt://neo4j:7687
+      NEO4J_USER: neo4j
+      NEO4J_PASSWORD: novamarket123
+      AI_GRAPH_AUTO_SYNC: "1"
     volumes:
       - ./services/ai_service:/app
     ports:
       - "8001:8001"
+    depends_on:
+      neo4j:
+        condition: service_started
+      product-service:
+        condition: service_started
+
+  neo4j:
+    image: neo4j:5.25
+    environment:
+      NEO4J_AUTH: neo4j/novamarket123
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - neo4j_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "cypher-shell -u neo4j -p novamarket123 'RETURN 1' || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
 
   product-service:
     build:
@@ -192,6 +222,7 @@ services:
     command: uvicorn app.main:app --host 0.0.0.0 --port 8080
     environment:
       COMMERCE_SERVICE_URL: http://commerce-service:8000
+      WEB_FRONTEND_URL: http://web-frontend:5173
       PRODUCT_SERVICE_URL: http://product-service:8010
       CART_SERVICE_URL: http://cart-service:8030
       ORDERING_SERVICE_URL: http://ordering-service:8020
@@ -201,6 +232,7 @@ services:
     ports:
       - "8080:8080"
     depends_on:
+      - web-frontend
       - commerce-service
       - product-service
       - cart-service
@@ -211,5 +243,20 @@ services:
     volumes:
       - ./services/api_gateway:/app
 
+  web-frontend:
+    build:
+      context: ./services/web_frontend
+    working_dir: /app
+    command: npm run dev -- --host 0.0.0.0 --port 5173
+    environment:
+      CHOKIDAR_USEPOLLING: "true"
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./services/web_frontend:/app
+      - web_frontend_node_modules:/app/node_modules
+
 volumes:
+  neo4j_data:
   postgres_data:
+  web_frontend_node_modules:

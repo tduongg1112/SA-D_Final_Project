@@ -1,79 +1,51 @@
 {% extends "layouts/base.html" %}
 
-{% block title %}NovaMarket | Home{% endblock %}
+{% block title %}NovaMarket | Frontend Reset{% endblock %}
 
 {% block content %}
-<section class="page-head">
-    <div>
-        <span class="eyebrow">Marketplace</span>
-        <h1>Clean commerce for everyday products.</h1>
-        <p>Browse across multiple categories, add items to cart, and complete checkout in one coherent flow.</p>
-    </div>
-    <div class="page-head-actions">
-        <a class="button button-primary" href="{% url 'catalog:product-list' %}">Browse products</a>
-        <a class="button button-secondary" href="/gateway/">Open gateway</a>
-    </div>
-</section>
-
-<section class="hero-panel">
-    <div class="hero-copy">
-        <span class="pill">DDD + Microservices</span>
-        <h2>One shell, one visual system, and service-aligned marketplace flow.</h2>
-        <p>The storefront now supports a broader multi-category assortment instead of a single tech-only catalog.</p>
-        <div class="hero-metrics">
-            <div class="metric-card">
-                <strong>{{ featured_products|length }}</strong>
-                <span>Featured items</span>
-            </div>
-            <div class="metric-card">
-                <strong>{{ categories|length }}</strong>
-                <span>Product groups</span>
-            </div>
-            <div class="metric-card">
-                <strong>5</strong>
-                <span>Business services</span>
-            </div>
-        </div>
-    </div>
-    <div class="hero-preview-grid">
-        {% for product in featured_products %}
-            <article class="preview-card">
-                <span>{{ product.category.name }}</span>
-                <strong>{{ product.name }}</strong>
-                <p>{{ product.brand }}</p>
-            </article>
-        {% endfor %}
+<section class="reset-card">
+    <span class="eyebrow">NovaMarket</span>
+    <h1>Frontend has been cleared.</h1>
+    <p>
+        The previous storefront implementation was removed so the next frontend can be rebuilt from a clean slate.
+        Backend contracts are still intact, but the UI layer is intentionally back to placeholder state.
+    </p>
+    <div class="reset-actions">
+        <a class="button button-primary" href="{% url 'catalog:product-list' %}">View placeholder products</a>
+        <a class="button button-secondary" href="{% url 'cart:detail' %}">Open placeholder cart</a>
+        <a class="button button-secondary" href="/gateway/">Open placeholder gateway</a>
     </div>
 </section>
 
-<section class="panel-section">
-    <div class="section-head">
-        <div>
-            <span class="eyebrow">Categories</span>
-            <h2>Start from focused product groups</h2>
-        </div>
-    </div>
-    <div class="category-grid">
-        {% for category in categories %}
-            <a class="category-card" href="{% url 'catalog:product-list' %}?category={{ category.slug }}">
-                <strong>{{ category.name }}</strong>
-                <p>{{ category.description|default:"Curated devices and accessories for daily use." }}</p>
-            </a>
-        {% endfor %}
-    </div>
+<section class="reset-grid">
+    <article class="reset-card">
+        <span class="eyebrow">Current state</span>
+        <h2>UI removed</h2>
+        <p>All major templates and styling were flattened into temporary placeholders.</p>
+    </article>
+    <article class="reset-card">
+        <span class="eyebrow">Data contract</span>
+        <h2>Still connected</h2>
+        <p>Product, cart, ordering, payment, and shipping services remain available behind the same backend flow.</p>
+    </article>
+    <article class="reset-card">
+        <span class="eyebrow">Next step</span>
+        <h2>Awaiting direction</h2>
+        <p>Provide the new IA, page hierarchy, and visual system, then the frontend can be rebuilt from zero.</p>
+    </article>
 </section>
 
-<section class="panel-section">
-    <div class="section-head">
-        <div>
-            <span class="eyebrow">Featured products</span>
-            <h2>Selected items ready for checkout</h2>
-        </div>
-        <a class="button button-secondary" href="{% url 'catalog:product-list' %}">See all</a>
-    </div>
-    <div class="product-grid">
+<section class="reset-card">
+    <span class="eyebrow">Available data</span>
+    <h2>Seed data is still visible in placeholder form.</h2>
+    <div class="reset-grid">
         {% for product in latest_products %}
             {% include "components/product_card.html" with product=product %}
+        {% empty %}
+            <article class="reset-tile">
+                <strong>No products loaded</strong>
+                <p>Product service data will appear here after the new frontend is designed.</p>
+            </article>
         {% endfor %}
     </div>
 </section>

@@ -1,46 +1,55 @@
 {% extends "layouts/base.html" %}
 
-{% block title %}NovaMarket | Products{% endblock %}
+{% block title %}NovaMarket | Products Reset{% endblock %}
 
 {% block content %}
-<section class="page-head">
-    <div>
-        <span class="eyebrow">Products</span>
-        <h1>Browse products without the clutter.</h1>
-        <p>Search quickly, filter by category, and move into product detail or cart.</p>
-    </div>
-</section>
-
-<section class="panel-section">
-    <div class="catalog-toolbar-panel">
-        <form class="catalog-search" method="get">
-            <input name="q" type="search" value="{{ query }}" placeholder="Search by product name, brand, or use case">
-            <button class="button button-primary" type="submit">Search</button>
-        </form>
-        <div class="catalog-summary-bar">
-            <span>{{ products|length }} products</span>
-            <span>{% if active_category %}Category: {{ active_category }}{% else %}All categories{% endif %}</span>
+<section class="reset-card">
+    <span class="eyebrow">Products</span>
+    <h1>Catalog frontend has been removed.</h1>
+    <p>
+        This page is now a placeholder while the product browsing experience is redesigned from zero.
+        Existing query and category parameters are still visible below for reference.
+    </p>
+    <div class="reset-meta">
+        <div class="reset-tile">
+            <strong>Active query</strong>
+            <p>{{ query|default:"No search keyword" }}</p>
         </div>
-        <div class="catalog-filter-row">
-            <a class="filter-chip {% if not active_category %}active{% endif %}" href="{% url 'catalog:product-list' %}">All</a>
-            {% for category in categories %}
-                <a class="filter-chip {% if active_category == category.slug %}active{% endif %}" href="{% url 'catalog:product-list' %}?category={{ category.slug }}{% if query %}&q={{ query }}{% endif %}">
-                    {{ category.name }}
-                </a>
-            {% endfor %}
+        <div class="reset-tile">
+            <strong>Active category</strong>
+            <p>{{ active_category|default:"All categories" }}</p>
         </div>
     </div>
 </section>
 
-<section class="panel-section">
-    <div class="product-grid">
+<section class="reset-card">
+    <span class="eyebrow">Categories</span>
+    <div class="reset-grid">
+        {% for category in categories %}
+            <article class="reset-tile">
+                <strong>{{ category.name }}</strong>
+                <p>{{ category.description|default:"Placeholder category entry." }}</p>
+                <span class="mono">{{ category.slug }}</span>
+            </article>
+        {% empty %}
+            <article class="reset-tile">
+                <strong>No categories</strong>
+                <p>No category data is available for the placeholder catalog.</p>
+            </article>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="reset-card">
+    <span class="eyebrow">Product payload</span>
+    <div class="reset-grid">
         {% for product in products %}
             {% include "components/product_card.html" with product=product %}
         {% empty %}
-            <div class="empty-state">
-                <h3>No products matched the current search.</h3>
-                <p>Try another keyword or clear the active category filter.</p>
-            </div>
+            <article class="reset-tile">
+                <strong>No products found</strong>
+                <p>The placeholder catalog is empty for the current filters.</p>
+            </article>
         {% endfor %}
     </div>
 </section>

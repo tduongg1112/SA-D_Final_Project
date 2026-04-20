@@ -30,20 +30,15 @@ class OrderingTests(TestCase):
     def test_checkout_creates_order(self):
         with (
             patch("apps.ordering.views.fetch_cart", return_value=self.cart_payload),
-            patch("apps.ordering.views.create_order", return_value={"id": 99}),
+            patch("apps.ordering.views.create_order", return_value={"id": 99}) as create_order,
             patch("apps.ordering.views.clear_cart", return_value={}),
         ):
-            response = self.client.post(
-                reverse("ordering:checkout"),
-                {
-                    "customer_name": "Test User",
-                    "customer_email": "user@example.com",
-                    "customer_phone": "0123456789",
-                    "shipping_address": "123 Test Street",
-                    "note": "Please deliver soon",
-                },
-            )
+            response = self.client.post(reverse("ordering:checkout"), {})
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, reverse("ordering:success", args=[99]))
+        payload = create_order.call_args.args[0]
+        self.assertEqual(payload["customer_name"], "NovaMarket Demo")
+        self.assertEqual(payload["customer_email"], "demo@novamarket.local")
+        self.assertTrue(payload["shipping_address"].startswith("Demo checkout profile"))
 
 # Create your tests here.

@@ -1,25 +1,8 @@
-<article class="product-card">
-    <div class="product-visual" style="background: linear-gradient(135deg, {{ product.accent_color }}, #ffffff);">
-        <span class="product-tag">{{ product.category.name }}</span>
-        <p>{{ product.brand }}</p>
-    </div>
-    <div class="product-card-body">
-        <div class="product-card-copy">
-            <h3>{{ product.name }}</h3>
-            <p>{{ product.short_description }}</p>
-        </div>
-        <div class="product-card-footer">
-            <div>
-                <strong>${{ product.price }}</strong>
-                <span>{% if product.is_in_stock %}In stock{% else %}Out of stock{% endif %}</span>
-            </div>
-            <div class="product-card-actions">
-                <form action="{% url 'cart:add' product.id %}" method="post">
-                    {% csrf_token %}
-                    <button class="button button-secondary" type="submit">Add</button>
-                </form>
-                <a class="button button-primary" href="{{ product.absolute_url }}">View</a>
-            </div>
-        </div>
+<article class="reset-tile">
+    <strong>{{ product.name }}</strong>
+    <p>{{ product.short_description|default:"Frontend placeholder state." }}</p>
+    <div class="reset-inline">
+        <span class="eyebrow">{{ product.category.name|default:"Category" }}</span>
+        <span class="mono">${{ product.price }}</span>
     </div>
 </article>

@@ -10,10 +10,21 @@ from config.service_clients import fetch_cart
 from config.service_clients import fetch_order_detail
 from config.service_clients import fetch_orders
 
+
+DEFAULT_CHECKOUT_PROFILE = {
+    "customer_name": "NovaMarket Demo",
+    "customer_email": "demo@novamarket.local",
+    "customer_phone": "0000 000 000",
+    "shipping_address": "Demo checkout profile applied automatically from the storefront shell.",
+    "note": "Quick checkout from the storefront demo.",
+}
+
+
 def humanize_status(value):
     if not value:
         return "Unavailable"
     return value.replace("_", " ").title()
+
 
 def get_checkout_context(request):
     cart = fetch_cart(request)
@@ -22,13 +33,29 @@ def get_checkout_context(request):
     return cart["items"], cart
 
 
-def build_checkout_payload(form, items):
+def default_checkout_profile(request):
+    profile = DEFAULT_CHECKOUT_PROFILE.copy()
+    if request.user.is_authenticated:
+        display_name = request.user.get_full_name().strip() or request.user.get_username()
+        profile["customer_name"] = display_name or profile["customer_name"]
+        if request.user.email:
+            profile["customer_email"] = request.user.email
+    return profile
+
+
+def build_checkout_payload(request, form, items):
+    profile = default_checkout_profile(request)
+    for field in ("customer_name", "customer_email", "customer_phone", "shipping_address", "note"):
+        value = (form.cleaned_data.get(field) or "").strip()
+        if value:
+            profile[field] = value
+
     return {
-        "customer_name": form.cleaned_data["customer_name"],
-        "customer_email": form.cleaned_data["customer_email"],
-        "customer_phone": form.cleaned_data["customer_phone"],
-        "shipping_address": form.cleaned_data["shipping_address"],
-        "note": form.cleaned_data["note"],
+        "customer_name": profile["customer_name"],
+        "customer_email": profile["customer_email"],
+        "customer_phone": profile["customer_phone"],
+        "shipping_address": profile["shipping_address"],
+        "note": profile["note"],
         "items": [
             {
                 "product_id": item["product_id"],
@@ -49,15 +76,9 @@ def checkout(request):
         return redirect("cart:detail")
 
     form = CheckoutForm(request.POST)
-    if not form.is_valid():
-        return render(
-            request,
-            "pages/cart/detail.html",
-            {"cart": cart, "checkout_form": form},
-            status=400,
-        )
+    form.is_valid()
 
-    order = create_order(build_checkout_payload(form, items))
+    order = create_order(build_checkout_payload(request, form, items))
     if order is None:
         form.add_error(None, "The ordering service is currently unavailable.")
         return render(

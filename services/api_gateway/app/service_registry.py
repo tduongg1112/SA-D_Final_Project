@@ -9,10 +9,17 @@ LIVE_SERVICES = [
         "status": "running",
     },
     {
+        "name": "web-frontend",
+        "type": "experience",
+        "base_url": settings.web_frontend_url,
+        "description": "React storefront shell served through the gateway for the rebuilt shopper and operator UI.",
+        "status": "managed",
+    },
+    {
         "name": "commerce-service",
-        "type": "business",
+        "type": "transitional",
         "base_url": settings.commerce_service_url,
-        "description": "Storefront UI, cart flow, and the remaining consolidated business capabilities.",
+        "description": "Legacy Django storefront kept temporarily during the UI rebuild and service refactor.",
         "status": "managed",
     },
     {
@@ -60,6 +67,7 @@ LIVE_SERVICES = [
 ]
 
 TARGET_SERVICE_MAP = [
+    "web-frontend",
     "identity-service",
     "product-service",
     "cart-service",

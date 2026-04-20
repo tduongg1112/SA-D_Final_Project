@@ -1,74 +1,42 @@
 {% extends "layouts/base.html" %}
 
-{% block title %}NovaMarket | Order Success{% endblock %}
+{% block title %}NovaMarket | Order Reset{% endblock %}
 
 {% block content %}
 {% if order %}
-    <section class="page-head">
-        <div>
-            <span class="eyebrow">Order created</span>
-            <h1>Order #{{ order.id }} completed successfully.</h1>
-            <p>The order is now visible with payment and shipping state across the separated services.</p>
-        </div>
-        <div class="page-head-actions">
-            <a class="button button-primary" href="{% url 'catalog:product-list' %}">Continue shopping</a>
+    <section class="reset-card">
+        <span class="eyebrow">Order success placeholder</span>
+        <h1>Order #{{ order.id }} exists, but the success UI was removed.</h1>
+        <p>The previous order confirmation frontend has been cleared and is awaiting a new design direction.</p>
+        <div class="reset-meta">
+            <div class="reset-tile">
+                <strong>Payment</strong>
+                <p>{{ order.payment_status_label }}</p>
+            </div>
+            <div class="reset-tile">
+                <strong>Shipping</strong>
+                <p>{{ order.shipping_status_label }}</p>
+            </div>
         </div>
     </section>
 
-    <section class="success-layout">
-        <div class="summary-card success-main-card">
-            <div class="summary-row">
-                <span>Customer</span>
-                <strong>{{ order.customer_name }}</strong>
-            </div>
-            <div class="summary-row">
-                <span>Total</span>
-                <strong>${{ order.total }}</strong>
-            </div>
-            <div class="summary-row">
-                <span>Payment</span>
-                <strong>{{ order.payment_status_label }}</strong>
-            </div>
-            <div class="summary-row">
-                <span>Shipping</span>
-                <strong>{{ order.shipping_status_label }}</strong>
-            </div>
-            {% if order.payment_reference %}
-                <div class="summary-row">
-                    <span>Payment reference</span>
-                    <strong>{{ order.payment_reference }}</strong>
-                </div>
-            {% endif %}
-            {% if order.tracking_code %}
-                <div class="summary-row">
-                    <span>Tracking code</span>
-                    <strong>{{ order.tracking_code }}</strong>
-                </div>
-            {% endif %}
-        </div>
-
-        <div class="summary-card">
-            <span class="eyebrow">Order items</span>
-            <div class="order-item-list">
-                {% for item in order.items %}
-                    <div class="order-item-card">
-                        <div>
-                            <strong>{{ item.product_name }}</strong>
-                            <span>{{ item.quantity }} x ${{ item.unit_price }}</span>
-                        </div>
-                        <strong>${{ item.line_total }}</strong>
-                    </div>
-                {% endfor %}
-            </div>
+    <section class="reset-card">
+        <span class="eyebrow">Order items</span>
+        <div class="reset-grid">
+            {% for item in order.items %}
+                <article class="reset-tile">
+                    <strong>{{ item.product_name }}</strong>
+                    <p>{{ item.quantity }} x ${{ item.unit_price }}</p>
+                    <span class="mono">${{ item.line_total }}</span>
+                </article>
+            {% endfor %}
         </div>
     </section>
 {% else %}
-    <section class="page-head">
-        <div>
-            <span class="eyebrow">Order unavailable</span>
-            <h1>The order service could not be reached.</h1>
-            <p>Retry after the ordering service is healthy again.</p>
-        </div>
+    <section class="reset-card">
+        <span class="eyebrow">Order unavailable</span>
+        <h1>Order frontend is in reset state.</h1>
+        <p>The order service could not be reached, and the previous success UI no longer exists.</p>
     </section>
 {% endif %}
 {% endblock %}

@@ -62,8 +62,8 @@ async def proxy_request(request: Request, destination_base_url: str, destination
     return response
 
 
-async def service_health(service_url: str) -> dict:
-    target = f"{service_url.rstrip('/')}/health"
+async def service_health(service_url: str, path: str = "/health") -> dict:
+    target = f"{service_url.rstrip('/')}/{path.lstrip('/')}"
     try:
         async with httpx.AsyncClient(timeout=3.0) as client:
             response = await client.get(target)

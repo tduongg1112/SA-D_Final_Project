@@ -3,46 +3,33 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>NovaMarket Gateway</title>
+    <title>NovaMarket Gateway Reset</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/gateway/static/gateway.css">
 </head>
 <body>
-    <main class="gateway-shell">
-        <section class="hero-card">
-            <div>
-                <p class="eyebrow">API Gateway</p>
-                <h1>NovaMarket service edge and traffic control plane</h1>
-                <p class="hero-copy">
-                    This gateway is the single public entry point for the storefront, internal business APIs,
-                    and AI assistant routes. It exposes health information, service visibility, and routing logic
-                    as a first-class architectural component.
-                </p>
-            </div>
-            <div class="hero-actions">
-                <a class="button primary" href="/">Open storefront</a>
-                <a class="button secondary" href="/gateway/api/services">Service JSON</a>
+    <main class="page">
+        <section class="card">
+            <p class="eyebrow">Gateway reset</p>
+            <h1>Gateway frontend has been cleared.</h1>
+            <p>
+                The previous gateway UI was removed together with the storefront frontend. This page now exists
+                only as a placeholder until the new operator experience is specified.
+            </p>
+            <div class="actions">
+                <a class="button primary" href="/">Open storefront placeholder</a>
+                <a class="button" href="/gateway/api/services">Service JSON</a>
             </div>
         </section>
 
-        <section class="panel">
-            <div class="panel-header">
-                <div>
-                    <p class="eyebrow">Live runtime</p>
-                    <h2>Registered services</h2>
-                </div>
-            </div>
-            <div class="card-grid">
+        <section class="card">
+            <p class="eyebrow">Live services</p>
+            <div class="grid">
                 {% for service in live_services %}
-                    <article class="service-card">
-                        <div class="service-top">
-                            <span class="badge">{{ service.type }}</span>
-                            {% if service.name in health %}
-                                <span class="status {{ health[service.name].status }}">{{ health[service.name].status }}</span>
-                            {% else %}
-                                <span class="status healthy">{{ service.status }}</span>
-                            {% endif %}
-                        </div>
-                        <h3>{{ service.name }}</h3>
+                    <article class="tile">
+                        <strong>{{ service.name }}</strong>
                         <p>{{ service.description }}</p>
                         <code>{{ service.base_url }}</code>
                     </article>
@@ -50,28 +37,21 @@
             </div>
         </section>
 
-        <section class="panel">
-            <div class="panel-header">
-                <div>
-                    <p class="eyebrow">Target design</p>
-                    <h2>Microservice decomposition roadmap</h2>
-                </div>
-            </div>
-            <div class="target-grid">
+        <section class="card">
+            <p class="eyebrow">Target services</p>
+            <div class="grid">
                 {% for service in target_microservices %}
-                    <div class="target-chip">{{ service }}</div>
+                    <article class="tile">
+                        <strong>{{ service }}</strong>
+                        <p>Placeholder gateway tile for the future UI rebuild.</p>
+                    </article>
                 {% endfor %}
             </div>
         </section>
 
-        <section class="panel">
-            <div class="panel-header">
-                <div>
-                    <p class="eyebrow">Routing surface</p>
-                    <h2>Public gateway paths</h2>
-                </div>
-            </div>
-            <table class="route-table">
+        <section class="card">
+            <p class="eyebrow">Routing surface</p>
+            <table>
                 <thead>
                     <tr>
                         <th>Route</th>
@@ -83,17 +63,12 @@
                     <tr>
                         <td>/</td>
                         <td>commerce-service</td>
-                        <td>Storefront UI</td>
+                        <td>Storefront placeholder</td>
                     </tr>
                     <tr>
                         <td>/api/products/*</td>
                         <td>product-service</td>
                         <td>Product APIs</td>
-                    </tr>
-                    <tr>
-                        <td>/api/catalog/*</td>
-                        <td>product-service</td>
-                        <td>Compatibility alias for legacy catalog paths</td>
                     </tr>
                     <tr>
                         <td>/api/cart/*</td>
@@ -118,12 +93,7 @@
                     <tr>
                         <td>/api/ai/*</td>
                         <td>ai-service</td>
-                        <td>Recommendation and assistant APIs</td>
-                    </tr>
-                    <tr>
-                        <td>/gateway/*</td>
-                        <td>api-gateway</td>
-                        <td>Operator UI and health</td>
+                        <td>AI APIs</td>
                     </tr>
                 </tbody>
             </table>

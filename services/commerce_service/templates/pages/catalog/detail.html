@@ -1,75 +1,44 @@
 {% extends "layouts/base.html" %}
 
-{% block title %}{{ product.name }} | NovaMarket{% endblock %}
+{% block title %}{{ product.name }} | Frontend Reset{% endblock %}
 
 {% block content %}
-<section class="page-head">
-    <div>
-        <span class="eyebrow">Product detail</span>
-        <h1>{{ product.name }}</h1>
-        <p>{{ product.short_description }}</p>
-    </div>
-    <div class="page-head-actions">
-        <a class="button button-secondary" href="{% url 'catalog:product-list' %}">Back to products</a>
-    </div>
-</section>
-
-<section class="detail-panel">
-    <div class="detail-visual" style="background: linear-gradient(135deg, {{ product.accent_color }}, #ffffff);">
-        <div class="detail-visual-head">
-            <span class="pill">{{ product.category.name }}</span>
-            <span class="status-badge {% if product.is_in_stock %}success{% else %}warning{% endif %}">
-                {% if product.is_in_stock %}In stock{% else %}Out of stock{% endif %}
-            </span>
+<section class="reset-card">
+    <span class="eyebrow">Product detail reset</span>
+    <h1>{{ product.name }}</h1>
+    <p>{{ product.short_description|default:"The detailed product experience has been removed pending redesign." }}</p>
+    <div class="reset-meta">
+        <div class="reset-tile">
+            <strong>Brand</strong>
+            <p>{{ product.brand|default:"Unknown" }}</p>
         </div>
-        <div class="detail-visual-copy">
-            <p>{{ product.brand }}</p>
-            <strong>${{ product.price }}</strong>
-        </div>
-    </div>
-    <div class="detail-info-panel">
-        <div class="detail-stack">
-            <h2>{{ product.name }}</h2>
-            <p>{{ product.description }}</p>
-        </div>
-        <div class="detail-specs">
-            <div class="spec-card">
-                <span>Brand</span>
-                <strong>{{ product.brand }}</strong>
-            </div>
-            <div class="spec-card">
-                <span>Status</span>
-                <strong>{{ product.status_label }}</strong>
-            </div>
-            <div class="spec-card">
-                <span>Stock</span>
-                <strong>{{ product.stock_quantity }}</strong>
-            </div>
-        </div>
-        <div class="detail-actions">
-            <form action="{% url 'cart:add' product.id %}" method="post">
-                {% csrf_token %}
-                <button class="button button-primary button-block" type="submit">Add to cart</button>
-            </form>
-            <a class="button button-secondary button-block" href="{% url 'cart:detail' %}">Open cart</a>
+        <div class="reset-tile">
+            <strong>Price</strong>
+            <p>${{ product.price }}</p>
         </div>
     </div>
 </section>
 
-<section class="panel-section">
-    <div class="section-head">
-        <div>
-            <span class="eyebrow">Related products</span>
-            <h2>Same category, same layout language</h2>
-        </div>
+<section class="reset-card">
+    <span class="eyebrow">Description payload</span>
+    <p>{{ product.description|default:"No detailed description provided." }}</p>
+    <div class="reset-inline">
+        <span class="reset-pill">{{ product.category.name|default:"Category" }}</span>
+        <span class="reset-pill">{{ product.status_label|default:"Unknown status" }}</span>
+        <span class="reset-pill">Stock: {{ product.stock_quantity }}</span>
     </div>
-    <div class="product-grid">
+</section>
+
+<section class="reset-card">
+    <span class="eyebrow">Related products</span>
+    <div class="reset-grid">
         {% for product in related_products %}
             {% include "components/product_card.html" with product=product %}
         {% empty %}
-            <div class="empty-state">
-                <h3>No related products available.</h3>
-            </div>
+            <article class="reset-tile">
+                <strong>No related products</strong>
+                <p>Related product placeholders will return once the new frontend is specified.</p>
+            </article>
         {% endfor %}
     </div>
 </section>

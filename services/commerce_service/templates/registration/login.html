@@ -1,30 +1,24 @@
 {% extends "layouts/base.html" %}
 
-{% block title %}NovaMarket | Sign In{% endblock %}
+{% block title %}NovaMarket | Login Reset{% endblock %}
 
 {% block content %}
-<section class="auth-layout">
-    <div class="auth-card">
-        <span class="eyebrow">Staff access</span>
-        <h1>Sign in to open the dashboard.</h1>
-        <p>Use the seeded account to review internal order activity.</p>
-        <form class="auth-form" method="post">
-            {% csrf_token %}
-            {{ form.non_field_errors }}
-            <label>
-                Username
-                {{ form.username }}
-            </label>
-            <label>
-                Password
-                {{ form.password }}
-            </label>
-            <button class="button button-primary button-block" type="submit">Sign in</button>
-        </form>
-        <div class="auth-note">
-            <strong>Demo account</strong>
-            <span>staff / staff12345</span>
-        </div>
-    </div>
+<section class="reset-card">
+    <span class="eyebrow">Login reset</span>
+    <h1>Staff sign-in UI has been cleared.</h1>
+    <p>The authentication route remains available, but the old login screen was removed with the rest of the frontend.</p>
+    <form class="reset-stack" method="post">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <label>
+            <span class="sr-only">Username</span>
+            {{ form.username }}
+        </label>
+        <label>
+            <span class="sr-only">Password</span>
+            {{ form.password }}
+        </label>
+        <button class="button button-primary" type="submit">Sign in</button>
+    </form>
 </section>
 {% endblock %}

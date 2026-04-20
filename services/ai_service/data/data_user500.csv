@@ -1,0 +1,501 @@
+user_id,session_id,last_search_keyword,dominant_category,search_count,product_view_count,detail_view_count,dwell_time_sec,add_wishlist_count,add_to_cart_count,remove_from_cart_count,purchase_count,target_label
+U001,S001,laptop,work-tech,6,12,5,410,1,2,0,1,high_intent
+U002,S002,desk lamp,work-tech,4,7,3,180,1,1,0,0,medium_intent
+U003,S003,yoga mat,wellness,5,9,4,320,1,2,1,1,high_intent
+U004,S004,water bottle,wellness,3,6,2,110,0,0,0,0,low_intent
+U005,S005,travel bag,travel-everyday,7,11,6,390,2,3,0,1,high_intent
+U006,S006,tote bag,travel-everyday,4,8,3,165,1,1,1,0,medium_intent
+U007,S007,skin care,beauty-care,5,10,5,300,2,2,0,0,medium_intent
+U008,S008,coffee press,kitchen-dining,2,5,2,95,0,0,0,0,low_intent
+U009,S009,diffuser,home-living,6,10,4,275,1,2,0,0,medium_intent
+U010,S010,blanket,home-living,2,4,1,70,0,0,0,0,low_intent
+U011,S011,laptop for study,work-tech,8,14,7,520,2,3,0,1,high_intent
+U012,S012,portable mirror,beauty-care,3,7,3,150,0,1,0,0,medium_intent
+U013,S013,bamboo board,kitchen-dining,2,6,2,105,0,0,0,0,low_intent
+U014,S014,hydration bottle,wellness,4,8,4,210,1,1,0,0,medium_intent
+U015,S015,overnight bag,travel-everyday,6,12,6,430,1,3,0,1,high_intent
+U016,S016,calm diffuser,home-living,5,9,4,260,1,1,1,0,medium_intent
+U017,S017,desk setup,work-tech,3,5,2,130,0,0,0,0,low_intent
+U018,S018,yoga home workout,wellness,7,13,6,470,2,2,0,1,high_intent
+U019,S019,travel tote,travel-everyday,4,7,3,175,0,1,0,0,medium_intent
+U020,S020,starter skincare,beauty-care,6,10,5,295,2,2,0,0,medium_intent
+U021,S021,kitchen prep,kitchen-dining,8,16,6,344,1,3,0,1,high_intent
+U022,S022,stretching routine,wellness,7,9,5,155,0,1,0,0,medium_intent
+U023,S023,overnight bag,travel-everyday,7,6,5,200,2,1,1,0,medium_intent
+U024,S024,gentle skincare,beauty-care,4,3,2,106,0,0,0,0,low_intent
+U025,S025,portable workstation,work-tech,9,13,5,338,2,4,1,1,high_intent
+U026,S026,bedside diffuser,home-living,4,5,3,266,0,1,1,0,medium_intent
+U027,S027,morning brew,kitchen-dining,7,7,3,193,1,2,0,0,medium_intent
+U028,S028,yoga mat,wellness,3,2,1,109,1,0,1,0,low_intent
+U029,S029,weekender,travel-everyday,2,7,2,150,0,0,1,0,low_intent
+U030,S030,gentle skincare,beauty-care,8,10,6,325,2,3,0,2,high_intent
+U031,S031,office setup,work-tech,9,12,8,525,1,4,0,1,high_intent
+U032,S032,reading nook,home-living,6,8,5,234,1,2,0,0,medium_intent
+U033,S033,kitchen prep,kitchen-dining,5,11,5,223,2,2,0,0,medium_intent
+U034,S034,yoga mat,wellness,4,7,1,94,0,0,0,0,low_intent
+U035,S035,commuter bag,travel-everyday,9,15,8,306,2,4,1,2,high_intent
+U036,S036,self care set,beauty-care,7,8,3,184,1,2,0,0,medium_intent
+U037,S037,laptop,work-tech,6,10,5,283,1,2,0,0,medium_intent
+U038,S038,calm home,home-living,3,7,2,133,1,0,1,0,low_intent
+U039,S039,bamboo board,kitchen-dining,4,2,1,85,0,0,0,0,low_intent
+U040,S040,water bottle,wellness,7,10,7,374,2,4,1,1,high_intent
+U041,S041,weekender,travel-everyday,6,15,5,436,2,3,1,2,high_intent
+U042,S042,starter skincare,beauty-care,5,8,5,242,0,2,1,0,medium_intent
+U043,S043,study laptop,work-tech,7,6,4,228,1,1,1,0,medium_intent
+U044,S044,reading nook,home-living,4,6,2,99,0,0,1,0,low_intent
+U045,S045,kitchen prep,kitchen-dining,9,16,8,321,2,4,0,2,high_intent
+U046,S046,stretching routine,wellness,4,5,3,300,0,1,0,0,medium_intent
+U047,S047,overnight bag,travel-everyday,5,8,5,187,2,1,1,0,medium_intent
+U048,S048,gentle skincare,beauty-care,2,2,2,138,0,0,1,0,low_intent
+U049,S049,desk lamp,work-tech,4,6,2,69,1,0,0,0,low_intent
+U050,S050,calm home,home-living,8,9,7,438,2,4,1,1,high_intent
+U051,S051,morning brew,kitchen-dining,6,15,8,379,2,4,0,2,high_intent
+U052,S052,stretching routine,wellness,7,10,5,229,2,2,1,0,medium_intent
+U053,S053,overnight bag,travel-everyday,5,7,4,201,0,1,0,0,medium_intent
+U054,S054,self care set,beauty-care,4,5,2,150,0,0,1,0,low_intent
+U055,S055,coding laptop,work-tech,7,10,7,399,3,3,0,2,high_intent
+U056,S056,bedside diffuser,home-living,7,11,5,236,1,1,1,0,medium_intent
+U057,S057,meal prep,kitchen-dining,5,6,3,294,0,1,0,0,medium_intent
+U058,S058,stretching routine,wellness,4,5,2,127,0,0,0,0,low_intent
+U059,S059,weekender,travel-everyday,2,4,2,40,0,0,0,0,low_intent
+U060,S060,gentle skincare,beauty-care,9,10,5,499,2,3,0,2,high_intent
+U061,S061,desk lamp,work-tech,9,14,6,553,1,3,1,1,high_intent
+U062,S062,bedside diffuser,home-living,7,10,3,145,0,2,0,0,medium_intent
+U063,S063,cutting board,kitchen-dining,4,7,3,295,2,1,1,0,medium_intent
+U064,S064,water bottle,wellness,4,2,1,56,0,0,1,0,low_intent
+U065,S065,tote bag,travel-everyday,9,10,6,521,1,3,0,1,high_intent
+U066,S066,starter skincare,beauty-care,5,11,3,150,0,1,0,0,medium_intent
+U067,S067,student device,work-tech,7,10,4,221,1,2,0,0,medium_intent
+U068,S068,bedside diffuser,home-living,2,3,1,152,1,0,1,0,low_intent
+U069,S069,coffee press,kitchen-dining,3,5,2,48,0,0,1,0,low_intent
+U070,S070,home workout,wellness,8,11,8,339,2,3,1,1,high_intent
+U071,S071,commuter bag,travel-everyday,6,13,5,346,1,3,1,2,high_intent
+U072,S072,portable mirror,beauty-care,7,5,4,329,2,2,0,0,medium_intent
+U073,S073,study laptop,work-tech,6,8,4,140,2,2,0,0,medium_intent
+U074,S074,diffuser,home-living,1,2,0,70,1,0,1,0,low_intent
+U075,S075,cutting board,kitchen-dining,8,13,6,491,1,3,1,1,high_intent
+U076,S076,fitness gear,wellness,4,7,3,259,0,2,0,0,medium_intent
+U077,S077,commuter bag,travel-everyday,4,10,5,258,0,1,0,0,medium_intent
+U078,S078,gentle skincare,beauty-care,2,4,2,115,0,0,1,0,low_intent
+U079,S079,coding laptop,work-tech,4,2,2,159,0,0,0,0,low_intent
+U080,S080,diffuser,home-living,6,11,4,387,2,2,0,1,high_intent
+U081,S081,morning brew,kitchen-dining,9,9,7,394,3,3,0,2,high_intent
+U082,S082,water bottle,wellness,7,7,3,202,0,1,1,0,medium_intent
+U083,S083,weekender,travel-everyday,4,8,3,284,0,1,1,0,medium_intent
+U084,S084,self care set,beauty-care,3,7,1,117,1,0,1,0,low_intent
+U085,S085,coding laptop,work-tech,8,11,8,539,3,4,1,1,high_intent
+U086,S086,sofa decor,home-living,7,9,5,298,2,2,1,0,medium_intent
+U087,S087,home cafe,kitchen-dining,7,5,3,304,2,2,1,0,medium_intent
+U088,S088,stretching routine,wellness,3,3,2,154,1,0,0,0,low_intent
+U089,S089,overnight bag,travel-everyday,2,2,1,132,0,0,0,0,low_intent
+U090,S090,portable mirror,beauty-care,8,10,6,386,2,3,0,1,high_intent
+U091,S091,desk lamp,work-tech,9,11,6,536,2,3,1,2,high_intent
+U092,S092,reading nook,home-living,7,8,5,202,2,1,1,0,medium_intent
+U093,S093,kitchen prep,kitchen-dining,5,8,4,214,2,2,0,0,medium_intent
+U094,S094,fitness gear,wellness,3,2,2,81,0,0,1,0,low_intent
+U095,S095,weekender,travel-everyday,8,16,6,427,3,4,0,1,high_intent
+U096,S096,beauty routine,beauty-care,5,10,4,167,2,1,0,0,medium_intent
+U097,S097,coding laptop,work-tech,7,9,3,249,1,1,0,0,medium_intent
+U098,S098,diffuser,home-living,1,6,0,121,0,0,0,0,low_intent
+U099,S099,home cafe,kitchen-dining,4,6,2,160,0,0,0,0,low_intent
+U100,S100,home workout,wellness,8,10,8,434,2,2,1,2,high_intent
+U101,S101,tote bag,travel-everyday,9,9,6,488,1,4,1,2,high_intent
+U102,S102,portable mirror,beauty-care,7,6,5,195,1,2,1,0,medium_intent
+U103,S103,study laptop,work-tech,5,7,5,237,2,1,1,0,medium_intent
+U104,S104,calm home,home-living,4,7,2,141,1,0,1,0,low_intent
+U105,S105,bamboo board,kitchen-dining,7,12,7,476,3,2,1,1,high_intent
+U106,S106,stretching routine,wellness,5,8,3,299,0,2,1,0,medium_intent
+U107,S107,travel bag,travel-everyday,7,10,3,190,1,2,0,0,medium_intent
+U108,S108,portable mirror,beauty-care,4,2,1,145,1,0,0,0,low_intent
+U109,S109,office setup,work-tech,4,6,1,145,1,0,1,0,low_intent
+U110,S110,diffuser,home-living,5,10,7,487,3,2,0,1,high_intent
+U111,S111,bamboo board,kitchen-dining,9,9,7,461,2,2,0,2,high_intent
+U112,S112,daily wellness,wellness,5,10,3,320,1,2,1,0,medium_intent
+U113,S113,daily carry,travel-everyday,5,5,3,248,2,2,0,0,medium_intent
+U114,S114,gentle skincare,beauty-care,4,5,2,135,1,0,1,0,low_intent
+U115,S115,office setup,work-tech,6,15,5,525,1,4,1,2,high_intent
+U116,S116,calm home,home-living,6,5,3,197,1,1,1,0,medium_intent
+U117,S117,coffee press,kitchen-dining,6,11,5,283,1,1,0,0,medium_intent
+U118,S118,hydration bottle,wellness,4,4,2,137,0,0,1,0,low_intent
+U119,S119,tote bag,travel-everyday,3,6,2,92,0,0,0,0,low_intent
+U120,S120,gentle skincare,beauty-care,9,10,8,315,2,4,1,1,high_intent
+U121,S121,portable workstation,work-tech,8,12,5,301,1,3,0,2,high_intent
+U122,S122,diffuser,home-living,3,8,3,278,2,1,1,0,medium_intent
+U123,S123,kitchen prep,kitchen-dining,5,11,4,321,1,2,1,0,medium_intent
+U124,S124,daily wellness,wellness,4,7,2,108,0,0,0,0,low_intent
+U125,S125,commuter bag,travel-everyday,9,13,8,476,2,4,0,2,high_intent
+U126,S126,starter skincare,beauty-care,6,5,4,305,1,2,1,0,medium_intent
+U127,S127,laptop,work-tech,7,6,4,249,2,1,1,0,medium_intent
+U128,S128,throw blanket,home-living,4,5,2,146,0,0,0,0,low_intent
+U129,S129,cutting board,kitchen-dining,4,5,2,149,1,0,1,0,low_intent
+U130,S130,water bottle,wellness,6,10,8,462,3,2,0,1,high_intent
+U131,S131,overnight bag,travel-everyday,9,14,7,536,2,2,1,1,high_intent
+U132,S132,self care set,beauty-care,7,11,5,186,0,1,0,0,medium_intent
+U133,S133,portable workstation,work-tech,4,10,5,329,2,2,1,0,medium_intent
+U134,S134,calm home,home-living,3,6,2,53,1,0,0,0,low_intent
+U135,S135,home cafe,kitchen-dining,9,15,7,366,2,3,1,1,high_intent
+U136,S136,stretching routine,wellness,4,9,4,154,0,2,1,0,medium_intent
+U137,S137,overnight bag,travel-everyday,7,10,5,258,0,2,0,0,medium_intent
+U138,S138,skin care,beauty-care,4,3,2,59,1,0,1,0,low_intent
+U139,S139,laptop,work-tech,2,2,1,99,0,0,0,0,low_intent
+U140,S140,reading nook,home-living,7,13,8,460,2,4,0,2,high_intent
+U141,S141,meal prep,kitchen-dining,8,9,7,460,2,2,1,2,high_intent
+U142,S142,home workout,wellness,5,10,3,263,2,2,0,0,medium_intent
+U143,S143,commuter bag,travel-everyday,6,5,5,182,0,2,0,0,medium_intent
+U144,S144,starter skincare,beauty-care,2,4,1,155,0,0,0,0,low_intent
+U145,S145,office setup,work-tech,9,10,5,388,1,3,0,1,high_intent
+U146,S146,bedside diffuser,home-living,7,10,5,196,0,2,0,0,medium_intent
+U147,S147,home cafe,kitchen-dining,4,10,4,210,2,2,0,0,medium_intent
+U148,S148,home workout,wellness,3,5,2,53,1,0,0,0,low_intent
+U149,S149,city trip bag,travel-everyday,2,2,2,137,0,0,0,0,low_intent
+U150,S150,skin care,beauty-care,6,13,8,403,1,3,1,2,high_intent
+U151,S151,laptop,work-tech,6,14,7,339,1,4,1,1,high_intent
+U152,S152,throw blanket,home-living,4,5,5,294,2,1,0,0,medium_intent
+U153,S153,morning brew,kitchen-dining,7,10,4,161,1,1,1,0,medium_intent
+U154,S154,home workout,wellness,2,2,2,142,0,0,0,0,low_intent
+U155,S155,travel bag,travel-everyday,8,10,8,346,2,4,1,1,high_intent
+U156,S156,self care set,beauty-care,6,8,5,246,1,1,0,0,medium_intent
+U157,S157,student device,work-tech,5,7,3,215,0,2,0,0,medium_intent
+U158,S158,calm home,home-living,4,5,2,59,1,0,1,0,low_intent
+U159,S159,meal prep,kitchen-dining,2,2,1,78,1,0,1,0,low_intent
+U160,S160,hydration bottle,wellness,9,13,7,410,2,2,1,1,high_intent
+U161,S161,overnight bag,travel-everyday,8,15,8,495,3,2,1,1,high_intent
+U162,S162,travel mirror,beauty-care,7,5,3,219,0,1,0,0,medium_intent
+U163,S163,desk lamp,work-tech,7,9,5,314,0,2,0,0,medium_intent
+U164,S164,cozy room,home-living,2,5,2,66,0,0,1,0,low_intent
+U165,S165,home cafe,kitchen-dining,9,14,5,449,1,2,1,2,high_intent
+U166,S166,yoga mat,wellness,4,8,5,144,0,2,0,0,medium_intent
+U167,S167,daily carry,travel-everyday,5,9,3,225,1,2,0,0,medium_intent
+U168,S168,skin care,beauty-care,3,7,1,135,0,0,0,0,low_intent
+U169,S169,desk lamp,work-tech,4,7,1,150,1,0,1,0,low_intent
+U170,S170,bedside diffuser,home-living,9,12,7,522,2,3,1,1,high_intent
+U171,S171,bamboo board,kitchen-dining,7,14,5,464,1,4,0,1,high_intent
+U172,S172,home workout,wellness,5,10,3,236,1,2,0,0,medium_intent
+U173,S173,city trip bag,travel-everyday,6,7,5,197,0,2,1,0,medium_intent
+U174,S174,starter skincare,beauty-care,4,5,2,86,0,0,1,0,low_intent
+U175,S175,student device,work-tech,9,10,8,539,1,3,0,2,high_intent
+U176,S176,reading nook,home-living,6,7,5,299,2,1,1,0,medium_intent
+U177,S177,kitchen prep,kitchen-dining,5,11,4,321,0,1,0,0,medium_intent
+U178,S178,stretching routine,wellness,3,6,2,112,1,0,1,0,low_intent
+U179,S179,city trip bag,travel-everyday,3,3,2,72,0,0,0,0,low_intent
+U180,S180,gentle skincare,beauty-care,8,16,7,387,2,4,0,1,high_intent
+U181,S181,coding laptop,work-tech,8,13,8,326,2,4,1,1,high_intent
+U182,S182,diffuser,home-living,7,11,2,214,1,1,0,0,medium_intent
+U183,S183,home cafe,kitchen-dining,6,5,3,294,0,2,1,0,medium_intent
+U184,S184,stretching routine,wellness,3,3,2,41,0,0,0,0,low_intent
+U185,S185,overnight bag,travel-everyday,8,10,8,379,2,4,0,1,high_intent
+U186,S186,beauty routine,beauty-care,5,7,3,154,1,2,1,0,medium_intent
+U187,S187,student device,work-tech,7,5,5,192,0,1,0,0,medium_intent
+U188,S188,sofa decor,home-living,3,3,1,110,1,0,0,0,low_intent
+U189,S189,morning brew,kitchen-dining,4,7,2,145,1,0,1,0,low_intent
+U190,S190,home workout,wellness,7,16,6,449,1,4,1,1,high_intent
+U191,S191,travel bag,travel-everyday,8,11,8,330,3,3,0,2,high_intent
+U192,S192,starter skincare,beauty-care,7,5,4,198,0,2,0,0,medium_intent
+U193,S193,study laptop,work-tech,4,7,3,149,1,1,0,0,medium_intent
+U194,S194,throw blanket,home-living,4,4,1,109,1,0,1,0,low_intent
+U195,S195,cutting board,kitchen-dining,7,15,8,544,2,2,0,2,high_intent
+U196,S196,stretching routine,wellness,7,11,4,148,1,2,0,0,medium_intent
+U197,S197,daily carry,travel-everyday,4,6,5,329,0,1,0,0,medium_intent
+U198,S198,self care set,beauty-care,2,2,2,160,0,0,0,0,low_intent
+U199,S199,coding laptop,work-tech,3,4,1,83,0,0,1,0,low_intent
+U200,S200,cozy room,home-living,9,14,5,553,3,2,1,1,high_intent
+U201,S201,morning brew,kitchen-dining,7,13,5,384,1,2,0,1,high_intent
+U202,S202,yoga mat,wellness,7,9,4,310,2,2,1,0,medium_intent
+U203,S203,city trip bag,travel-everyday,7,9,5,297,2,2,0,0,medium_intent
+U204,S204,starter skincare,beauty-care,4,4,2,150,0,0,0,0,low_intent
+U205,S205,desk lamp,work-tech,8,11,8,468,3,2,0,1,high_intent
+U206,S206,calm home,home-living,7,9,5,174,2,1,1,0,medium_intent
+U207,S207,morning brew,kitchen-dining,6,5,5,170,2,1,1,0,medium_intent
+U208,S208,hydration bottle,wellness,3,4,2,73,1,0,1,0,low_intent
+U209,S209,daily carry,travel-everyday,4,6,1,88,1,0,0,0,low_intent
+U210,S210,skin care,beauty-care,9,15,5,332,1,2,0,2,high_intent
+U211,S211,portable workstation,work-tech,6,12,7,315,2,4,1,2,high_intent
+U212,S212,cozy room,home-living,7,8,4,141,1,1,1,0,medium_intent
+U213,S213,home cafe,kitchen-dining,4,11,5,158,0,2,1,0,medium_intent
+U214,S214,home workout,wellness,2,2,2,98,0,0,1,0,low_intent
+U215,S215,travel bag,travel-everyday,8,9,7,417,3,3,1,2,high_intent
+U216,S216,starter skincare,beauty-care,5,5,5,329,2,2,0,0,medium_intent
+U217,S217,student device,work-tech,5,9,3,320,1,1,1,0,medium_intent
+U218,S218,diffuser,home-living,4,4,1,100,0,0,0,0,low_intent
+U219,S219,morning brew,kitchen-dining,3,2,1,91,1,0,1,0,low_intent
+U220,S220,yoga mat,wellness,7,11,7,507,3,2,0,2,high_intent
+U221,S221,daily carry,travel-everyday,9,9,5,337,1,4,1,1,high_intent
+U222,S222,skin care,beauty-care,5,6,5,229,0,1,1,0,medium_intent
+U223,S223,laptop,work-tech,4,11,3,328,0,2,0,0,medium_intent
+U224,S224,reading nook,home-living,3,3,2,153,0,0,1,0,low_intent
+U225,S225,kitchen prep,kitchen-dining,6,12,8,436,1,4,1,2,high_intent
+U226,S226,hydration bottle,wellness,7,5,3,177,0,1,1,0,medium_intent
+U227,S227,commuter bag,travel-everyday,5,5,3,205,2,1,0,0,medium_intent
+U228,S228,skin care,beauty-care,4,3,2,78,0,0,1,0,low_intent
+U229,S229,coding laptop,work-tech,4,5,2,92,0,0,1,0,low_intent
+U230,S230,sofa decor,home-living,8,16,8,332,1,4,1,2,high_intent
+U231,S231,morning brew,kitchen-dining,9,12,8,341,1,2,0,1,high_intent
+U232,S232,hydration bottle,wellness,7,11,5,311,0,2,1,0,medium_intent
+U233,S233,daily carry,travel-everyday,7,9,3,185,2,2,1,0,medium_intent
+U234,S234,portable mirror,beauty-care,2,4,2,93,0,0,1,0,low_intent
+U235,S235,office setup,work-tech,9,16,6,431,1,4,1,2,high_intent
+U236,S236,bedside diffuser,home-living,7,9,5,201,0,2,0,0,medium_intent
+U237,S237,morning brew,kitchen-dining,6,8,4,249,2,1,1,0,medium_intent
+U238,S238,yoga mat,wellness,4,4,2,91,0,0,0,0,low_intent
+U239,S239,travel bag,travel-everyday,4,6,2,47,1,0,1,0,low_intent
+U240,S240,skin care,beauty-care,9,16,7,341,2,4,0,1,high_intent
+U241,S241,study laptop,work-tech,9,13,6,552,2,4,0,1,high_intent
+U242,S242,reading nook,home-living,7,6,4,162,1,1,1,0,medium_intent
+U243,S243,meal prep,kitchen-dining,4,10,5,167,0,2,1,0,medium_intent
+U244,S244,fitness gear,wellness,4,4,1,87,0,0,0,0,low_intent
+U245,S245,commuter bag,travel-everyday,6,15,6,396,1,3,1,1,high_intent
+U246,S246,beauty routine,beauty-care,7,9,4,305,2,2,1,0,medium_intent
+U247,S247,study laptop,work-tech,6,6,5,195,2,1,0,0,medium_intent
+U248,S248,reading nook,home-living,4,3,1,121,1,0,1,0,low_intent
+U249,S249,meal prep,kitchen-dining,3,2,2,133,0,0,0,0,low_intent
+U250,S250,hydration bottle,wellness,9,12,6,393,2,2,0,2,high_intent
+U251,S251,overnight bag,travel-everyday,6,12,8,366,1,4,1,2,high_intent
+U252,S252,starter skincare,beauty-care,6,5,3,271,1,1,0,0,medium_intent
+U253,S253,laptop,work-tech,7,7,4,144,1,1,0,0,medium_intent
+U254,S254,sofa decor,home-living,2,7,2,46,0,0,0,0,low_intent
+U255,S255,coffee press,kitchen-dining,6,10,8,411,2,2,0,1,high_intent
+U256,S256,daily wellness,wellness,6,9,4,231,1,1,1,0,medium_intent
+U257,S257,commuter bag,travel-everyday,4,11,5,247,2,1,0,0,medium_intent
+U258,S258,beauty routine,beauty-care,2,6,1,58,1,0,0,0,low_intent
+U259,S259,desk lamp,work-tech,4,6,2,127,0,0,0,0,low_intent
+U260,S260,throw blanket,home-living,8,13,6,392,3,4,0,2,high_intent
+U261,S261,cutting board,kitchen-dining,7,15,8,352,3,3,0,2,high_intent
+U262,S262,water bottle,wellness,6,8,3,247,0,2,0,0,medium_intent
+U263,S263,travel bag,travel-everyday,4,6,5,148,1,2,0,0,medium_intent
+U264,S264,self care set,beauty-care,3,5,2,157,1,0,1,0,low_intent
+U265,S265,coding laptop,work-tech,8,15,7,558,3,4,0,1,high_intent
+U266,S266,reading nook,home-living,6,6,5,296,0,2,0,0,medium_intent
+U267,S267,home cafe,kitchen-dining,7,10,5,302,0,1,0,0,medium_intent
+U268,S268,daily wellness,wellness,4,5,2,115,1,0,1,0,low_intent
+U269,S269,daily carry,travel-everyday,3,4,1,49,0,0,0,0,low_intent
+U270,S270,starter skincare,beauty-care,8,10,8,491,2,3,1,1,high_intent
+U271,S271,student device,work-tech,9,16,8,341,1,3,1,2,high_intent
+U272,S272,diffuser,home-living,3,7,3,243,0,1,1,0,medium_intent
+U273,S273,morning brew,kitchen-dining,7,10,4,236,2,1,1,0,medium_intent
+U274,S274,hydration bottle,wellness,2,7,1,61,0,0,0,0,low_intent
+U275,S275,overnight bag,travel-everyday,6,14,6,350,3,4,0,2,high_intent
+U276,S276,starter skincare,beauty-care,7,8,3,277,1,2,1,0,medium_intent
+U277,S277,coding laptop,work-tech,7,6,5,280,1,2,1,0,medium_intent
+U278,S278,sofa decor,home-living,4,4,2,119,1,0,1,0,low_intent
+U279,S279,coffee press,kitchen-dining,2,7,2,140,0,0,1,0,low_intent
+U280,S280,water bottle,wellness,9,15,5,418,1,3,1,1,high_intent
+U281,S281,city trip bag,travel-everyday,9,13,8,525,3,2,0,2,high_intent
+U282,S282,starter skincare,beauty-care,4,7,5,329,1,1,1,0,medium_intent
+U283,S283,study laptop,work-tech,5,11,5,160,0,1,1,0,medium_intent
+U284,S284,throw blanket,home-living,4,3,2,108,0,0,0,0,low_intent
+U285,S285,coffee press,kitchen-dining,8,12,6,361,1,3,1,1,high_intent
+U286,S286,home workout,wellness,4,10,3,177,2,1,0,0,medium_intent
+U287,S287,commuter bag,travel-everyday,7,8,3,208,1,1,0,0,medium_intent
+U288,S288,skin care,beauty-care,4,6,2,64,1,0,0,0,low_intent
+U289,S289,coding laptop,work-tech,3,4,2,136,1,0,1,0,low_intent
+U290,S290,cozy room,home-living,6,13,5,474,3,3,1,2,high_intent
+U291,S291,morning brew,kitchen-dining,7,16,8,515,1,3,0,2,high_intent
+U292,S292,home workout,wellness,7,5,3,241,0,1,0,0,medium_intent
+U293,S293,overnight bag,travel-everyday,7,5,3,195,0,2,0,0,medium_intent
+U294,S294,portable mirror,beauty-care,2,4,2,148,0,0,0,0,low_intent
+U295,S295,portable workstation,work-tech,6,11,5,311,1,3,0,2,high_intent
+U296,S296,throw blanket,home-living,6,11,5,140,0,1,1,0,medium_intent
+U297,S297,coffee press,kitchen-dining,7,7,5,204,0,1,1,0,medium_intent
+U298,S298,home workout,wellness,4,6,2,87,1,0,0,0,low_intent
+U299,S299,daily carry,travel-everyday,4,6,2,131,0,0,1,0,low_intent
+U300,S300,travel mirror,beauty-care,8,13,8,510,3,3,1,2,high_intent
+U301,S301,study laptop,work-tech,7,16,6,324,2,3,1,1,high_intent
+U302,S302,sofa decor,home-living,6,8,5,248,0,1,0,0,medium_intent
+U303,S303,kitchen prep,kitchen-dining,5,6,4,167,0,2,0,0,medium_intent
+U304,S304,fitness gear,wellness,4,2,2,50,1,0,1,0,low_intent
+U305,S305,daily carry,travel-everyday,6,10,6,526,1,3,1,1,high_intent
+U306,S306,starter skincare,beauty-care,6,5,4,291,2,1,1,0,medium_intent
+U307,S307,laptop,work-tech,3,6,4,326,0,2,1,0,medium_intent
+U308,S308,throw blanket,home-living,4,2,2,114,0,0,0,0,low_intent
+U309,S309,cutting board,kitchen-dining,4,2,1,106,0,0,1,0,low_intent
+U310,S310,daily wellness,wellness,9,10,5,450,1,3,0,1,high_intent
+U311,S311,travel bag,travel-everyday,6,9,7,557,3,4,1,2,high_intent
+U312,S312,self care set,beauty-care,4,10,5,315,1,1,1,0,medium_intent
+U313,S313,laptop,work-tech,6,9,4,243,2,1,0,0,medium_intent
+U314,S314,cozy room,home-living,3,2,2,107,1,0,0,0,low_intent
+U315,S315,coffee press,kitchen-dining,8,11,6,333,3,3,1,2,high_intent
+U316,S316,water bottle,wellness,4,10,4,235,0,1,1,0,medium_intent
+U317,S317,city trip bag,travel-everyday,7,9,4,289,1,2,1,0,medium_intent
+U318,S318,starter skincare,beauty-care,3,7,2,141,0,0,1,0,low_intent
+U319,S319,study laptop,work-tech,3,6,2,135,0,0,0,0,low_intent
+U320,S320,cozy room,home-living,9,11,8,321,2,2,0,2,high_intent
+U321,S321,cutting board,kitchen-dining,6,13,8,360,1,4,0,1,high_intent
+U322,S322,home workout,wellness,4,7,3,316,1,1,0,0,medium_intent
+U323,S323,tote bag,travel-everyday,6,8,5,268,0,2,1,0,medium_intent
+U324,S324,self care set,beauty-care,4,5,2,157,0,0,0,0,low_intent
+U325,S325,student device,work-tech,8,13,8,485,1,4,1,2,high_intent
+U326,S326,reading nook,home-living,4,6,3,217,0,1,1,0,medium_intent
+U327,S327,cutting board,kitchen-dining,6,5,5,196,1,2,0,0,medium_intent
+U328,S328,daily wellness,wellness,3,7,2,107,0,0,0,0,low_intent
+U329,S329,travel bag,travel-everyday,4,4,2,151,0,0,0,0,low_intent
+U330,S330,beauty routine,beauty-care,8,14,6,402,1,3,1,2,high_intent
+U331,S331,student device,work-tech,8,15,5,313,1,2,1,2,high_intent
+U332,S332,diffuser,home-living,4,8,3,203,1,1,1,0,medium_intent
+U333,S333,meal prep,kitchen-dining,5,5,4,248,1,1,1,0,medium_intent
+U334,S334,daily wellness,wellness,2,2,2,57,1,0,1,0,low_intent
+U335,S335,city trip bag,travel-everyday,8,10,5,428,2,3,0,1,high_intent
+U336,S336,self care set,beauty-care,7,10,5,296,1,1,1,0,medium_intent
+U337,S337,laptop,work-tech,7,9,2,312,1,1,1,0,medium_intent
+U338,S338,sofa decor,home-living,3,4,2,54,0,0,1,0,low_intent
+U339,S339,home cafe,kitchen-dining,2,4,2,128,0,0,1,0,low_intent
+U340,S340,water bottle,wellness,9,13,6,477,3,4,0,2,high_intent
+U341,S341,commuter bag,travel-everyday,6,9,7,508,2,3,1,1,high_intent
+U342,S342,portable mirror,beauty-care,4,5,4,287,1,1,0,0,medium_intent
+U343,S343,laptop,work-tech,6,7,3,308,1,1,1,0,medium_intent
+U344,S344,bedside diffuser,home-living,2,6,2,116,0,0,1,0,low_intent
+U345,S345,home cafe,kitchen-dining,9,10,8,516,2,3,1,1,high_intent
+U346,S346,fitness gear,wellness,7,5,3,300,2,1,0,0,medium_intent
+U347,S347,commuter bag,travel-everyday,7,5,5,289,1,2,0,0,medium_intent
+U348,S348,skin care,beauty-care,2,2,1,134,1,0,0,0,low_intent
+U349,S349,study laptop,work-tech,4,2,1,117,1,0,1,0,low_intent
+U350,S350,calm home,home-living,9,10,8,483,2,2,0,1,high_intent
+U351,S351,cutting board,kitchen-dining,9,12,6,401,1,4,1,2,high_intent
+U352,S352,water bottle,wellness,7,7,4,212,1,2,0,0,medium_intent
+U353,S353,weekender,travel-everyday,7,10,3,309,1,1,0,0,medium_intent
+U354,S354,portable mirror,beauty-care,4,3,2,125,1,0,0,0,low_intent
+U355,S355,laptop,work-tech,5,10,8,315,3,2,1,2,high_intent
+U356,S356,diffuser,home-living,6,6,5,169,0,2,1,0,medium_intent
+U357,S357,morning brew,kitchen-dining,7,6,5,311,1,1,1,0,medium_intent
+U358,S358,home workout,wellness,4,7,2,142,1,0,0,0,low_intent
+U359,S359,commuter bag,travel-everyday,4,4,1,108,0,0,1,0,low_intent
+U360,S360,self care set,beauty-care,9,12,5,414,3,3,0,1,high_intent
+U361,S361,student device,work-tech,8,15,7,424,1,3,0,2,high_intent
+U362,S362,throw blanket,home-living,4,6,3,235,2,1,0,0,medium_intent
+U363,S363,home cafe,kitchen-dining,5,5,5,232,2,1,0,0,medium_intent
+U364,S364,home workout,wellness,2,6,2,125,1,0,0,0,low_intent
+U365,S365,travel bag,travel-everyday,6,12,8,413,2,4,1,2,high_intent
+U366,S366,gentle skincare,beauty-care,7,7,3,253,2,2,0,0,medium_intent
+U367,S367,student device,work-tech,6,7,5,233,1,2,1,0,medium_intent
+U368,S368,calm home,home-living,2,6,2,89,0,0,0,0,low_intent
+U369,S369,home cafe,kitchen-dining,4,3,2,78,0,0,0,0,low_intent
+U370,S370,water bottle,wellness,6,10,8,513,2,4,1,1,high_intent
+U371,S371,tote bag,travel-everyday,9,15,6,433,3,4,0,1,high_intent
+U372,S372,skin care,beauty-care,5,6,5,207,1,1,1,0,medium_intent
+U373,S373,desk lamp,work-tech,5,5,4,307,2,2,1,0,medium_intent
+U374,S374,reading nook,home-living,2,5,1,115,1,0,1,0,low_intent
+U375,S375,coffee press,kitchen-dining,8,11,6,480,1,2,1,2,high_intent
+U376,S376,hydration bottle,wellness,7,10,5,228,0,1,0,0,medium_intent
+U377,S377,weekender,travel-everyday,3,5,5,268,0,2,0,0,medium_intent
+U378,S378,skin care,beauty-care,3,6,2,67,0,0,1,0,low_intent
+U379,S379,portable workstation,work-tech,4,4,2,90,1,0,1,0,low_intent
+U380,S380,throw blanket,home-living,6,16,8,550,1,3,1,2,high_intent
+U381,S381,morning brew,kitchen-dining,6,10,5,457,2,2,0,2,high_intent
+U382,S382,water bottle,wellness,4,11,3,264,1,2,1,0,medium_intent
+U383,S383,city trip bag,travel-everyday,6,9,3,274,0,2,1,0,medium_intent
+U384,S384,beauty routine,beauty-care,3,2,2,122,1,0,0,0,low_intent
+U385,S385,study laptop,work-tech,7,12,8,486,1,2,0,2,high_intent
+U386,S386,throw blanket,home-living,4,9,5,233,2,1,0,0,medium_intent
+U387,S387,meal prep,kitchen-dining,5,11,5,282,2,2,0,0,medium_intent
+U388,S388,daily wellness,wellness,4,3,1,100,1,0,1,0,low_intent
+U389,S389,weekender,travel-everyday,3,6,0,80,0,0,1,0,low_intent
+U390,S390,portable mirror,beauty-care,6,16,8,348,3,4,0,2,high_intent
+U391,S391,laptop,work-tech,7,14,4,456,1,2,1,1,high_intent
+U392,S392,sofa decor,home-living,5,5,5,169,2,1,1,0,medium_intent
+U393,S393,cutting board,kitchen-dining,7,7,5,221,1,2,0,0,medium_intent
+U394,S394,yoga mat,wellness,2,4,2,113,0,0,1,0,low_intent
+U395,S395,travel bag,travel-everyday,9,9,6,339,3,4,1,1,high_intent
+U396,S396,starter skincare,beauty-care,7,10,5,217,1,1,1,0,medium_intent
+U397,S397,laptop,work-tech,3,6,4,205,0,2,1,0,medium_intent
+U398,S398,calm home,home-living,4,2,2,110,1,0,0,0,low_intent
+U399,S399,kitchen prep,kitchen-dining,4,5,1,67,0,0,0,0,low_intent
+U400,S400,fitness gear,wellness,9,13,7,508,2,2,0,2,high_intent
+U401,S401,city trip bag,travel-everyday,9,9,7,404,2,2,1,1,high_intent
+U402,S402,travel mirror,beauty-care,7,10,5,246,1,2,1,0,medium_intent
+U403,S403,desk lamp,work-tech,6,7,5,276,1,1,1,0,medium_intent
+U404,S404,calm home,home-living,4,5,2,78,1,0,1,0,low_intent
+U405,S405,kitchen prep,kitchen-dining,9,10,5,356,2,2,0,2,high_intent
+U406,S406,water bottle,wellness,4,5,3,321,2,1,0,0,medium_intent
+U407,S407,travel bag,travel-everyday,5,9,5,148,2,2,0,0,medium_intent
+U408,S408,beauty routine,beauty-care,3,5,1,49,1,0,1,0,low_intent
+U409,S409,student device,work-tech,4,7,2,101,1,0,0,0,low_intent
+U410,S410,calm home,home-living,9,12,8,399,3,4,0,2,high_intent
+U411,S411,home cafe,kitchen-dining,7,9,7,531,3,3,1,1,high_intent
+U412,S412,water bottle,wellness,7,8,3,159,0,1,1,0,medium_intent
+U413,S413,commuter bag,travel-everyday,7,6,5,279,2,1,0,0,medium_intent
+U414,S414,portable mirror,beauty-care,3,7,2,89,1,0,0,0,low_intent
+U415,S415,portable workstation,work-tech,9,14,7,313,1,2,1,2,high_intent
+U416,S416,throw blanket,home-living,5,5,4,238,1,2,1,0,medium_intent
+U417,S417,bamboo board,kitchen-dining,7,10,3,203,0,2,0,0,medium_intent
+U418,S418,hydration bottle,wellness,4,5,2,139,0,0,0,0,low_intent
+U419,S419,daily carry,travel-everyday,3,4,1,130,0,0,1,0,low_intent
+U420,S420,skin care,beauty-care,7,11,8,368,3,2,0,1,high_intent
+U421,S421,coding laptop,work-tech,6,9,6,370,3,4,0,2,high_intent
+U422,S422,throw blanket,home-living,7,8,5,177,0,1,0,0,medium_intent
+U423,S423,kitchen prep,kitchen-dining,7,11,3,237,0,1,0,0,medium_intent
+U424,S424,water bottle,wellness,3,3,1,130,0,0,0,0,low_intent
+U425,S425,travel bag,travel-everyday,9,9,7,501,2,3,0,2,high_intent
+U426,S426,starter skincare,beauty-care,4,10,5,168,2,1,0,0,medium_intent
+U427,S427,office setup,work-tech,5,9,3,152,0,1,0,0,medium_intent
+U428,S428,calm home,home-living,4,5,2,86,0,0,0,0,low_intent
+U429,S429,cutting board,kitchen-dining,2,4,2,101,1,0,1,0,low_intent
+U430,S430,yoga mat,wellness,7,16,8,459,1,2,1,2,high_intent
+U431,S431,commuter bag,travel-everyday,7,12,8,333,1,4,1,2,high_intent
+U432,S432,travel mirror,beauty-care,7,8,3,219,2,1,0,0,medium_intent
+U433,S433,desk lamp,work-tech,7,11,5,291,1,1,1,0,medium_intent
+U434,S434,throw blanket,home-living,3,6,2,81,1,0,1,0,low_intent
+U435,S435,home cafe,kitchen-dining,9,13,8,516,3,2,0,2,high_intent
+U436,S436,fitness gear,wellness,5,7,5,311,0,1,0,0,medium_intent
+U437,S437,weekender,travel-everyday,7,8,2,228,0,2,0,0,medium_intent
+U438,S438,beauty routine,beauty-care,4,4,2,120,0,0,0,0,low_intent
+U439,S439,student device,work-tech,3,2,2,55,1,0,0,0,low_intent
+U440,S440,throw blanket,home-living,9,13,6,420,1,3,1,1,high_intent
+U441,S441,kitchen prep,kitchen-dining,9,12,7,426,3,3,1,2,high_intent
+U442,S442,stretching routine,wellness,7,6,4,185,0,2,0,0,medium_intent
+U443,S443,daily carry,travel-everyday,5,5,4,222,2,1,1,0,medium_intent
+U444,S444,starter skincare,beauty-care,2,2,2,100,1,0,1,0,low_intent
+U445,S445,laptop,work-tech,8,12,8,465,1,4,0,1,high_intent
+U446,S446,cozy room,home-living,6,11,5,299,0,1,0,0,medium_intent
+U447,S447,bamboo board,kitchen-dining,7,7,4,314,2,1,0,0,medium_intent
+U448,S448,home workout,wellness,3,7,2,95,0,0,1,0,low_intent
+U449,S449,tote bag,travel-everyday,3,3,2,40,0,0,0,0,low_intent
+U450,S450,gentle skincare,beauty-care,6,14,5,454,1,3,0,1,high_intent
+U451,S451,coding laptop,work-tech,8,12,7,542,3,3,1,2,high_intent
+U452,S452,cozy room,home-living,5,8,5,200,2,2,1,0,medium_intent
+U453,S453,meal prep,kitchen-dining,5,10,3,294,1,2,0,0,medium_intent
+U454,S454,hydration bottle,wellness,4,6,2,87,1,0,1,0,low_intent
+U455,S455,overnight bag,travel-everyday,7,11,8,347,1,2,0,1,high_intent
+U456,S456,beauty routine,beauty-care,4,5,3,166,2,2,0,0,medium_intent
+U457,S457,coding laptop,work-tech,7,5,3,151,2,1,1,0,medium_intent
+U458,S458,throw blanket,home-living,4,7,1,108,1,0,0,0,low_intent
+U459,S459,home cafe,kitchen-dining,4,2,2,51,1,0,1,0,low_intent
+U460,S460,home workout,wellness,9,12,8,488,3,4,1,1,high_intent
+U461,S461,travel bag,travel-everyday,6,10,8,413,3,2,0,2,high_intent
+U462,S462,portable mirror,beauty-care,4,6,4,149,0,2,0,0,medium_intent
+U463,S463,desk lamp,work-tech,5,8,5,270,2,1,1,0,medium_intent
+U464,S464,calm home,home-living,3,3,1,58,1,0,0,0,low_intent
+U465,S465,bamboo board,kitchen-dining,7,12,8,361,1,4,1,1,high_intent
+U466,S466,stretching routine,wellness,4,7,3,219,1,1,0,0,medium_intent
+U467,S467,tote bag,travel-everyday,7,11,5,183,1,2,0,0,medium_intent
+U468,S468,travel mirror,beauty-care,3,6,1,121,1,0,1,0,low_intent
+U469,S469,portable workstation,work-tech,2,7,1,155,1,0,0,0,low_intent
+U470,S470,diffuser,home-living,9,10,4,427,2,3,1,1,high_intent
+U471,S471,coffee press,kitchen-dining,9,12,8,486,1,4,1,2,high_intent
+U472,S472,fitness gear,wellness,7,11,5,163,2,2,1,0,medium_intent
+U473,S473,city trip bag,travel-everyday,7,7,5,268,0,1,0,0,medium_intent
+U474,S474,gentle skincare,beauty-care,3,7,2,112,0,0,0,0,low_intent
+U475,S475,coding laptop,work-tech,8,15,5,300,1,4,0,2,high_intent
+U476,S476,calm home,home-living,4,7,4,174,0,1,1,0,medium_intent
+U477,S477,coffee press,kitchen-dining,6,8,4,301,1,2,1,0,medium_intent
+U478,S478,fitness gear,wellness,3,5,2,92,0,0,0,0,low_intent
+U479,S479,commuter bag,travel-everyday,3,2,2,112,0,0,0,0,low_intent
+U480,S480,skin care,beauty-care,9,15,8,439,1,3,0,1,high_intent
+U481,S481,coding laptop,work-tech,6,10,6,507,3,3,1,2,high_intent
+U482,S482,bedside diffuser,home-living,4,10,5,313,0,2,0,0,medium_intent
+U483,S483,bamboo board,kitchen-dining,7,8,5,299,0,2,1,0,medium_intent
+U484,S484,home workout,wellness,3,5,1,69,0,0,1,0,low_intent
+U485,S485,tote bag,travel-everyday,8,12,6,466,2,4,0,2,high_intent
+U486,S486,starter skincare,beauty-care,7,11,5,228,1,2,1,0,medium_intent
+U487,S487,student device,work-tech,7,8,5,324,2,1,1,0,medium_intent
+U488,S488,calm home,home-living,4,6,2,148,0,0,1,0,low_intent
+U489,S489,bamboo board,kitchen-dining,4,3,2,103,0,0,1,0,low_intent
+U490,S490,stretching routine,wellness,6,10,7,495,3,2,1,1,high_intent
+U491,S491,overnight bag,travel-everyday,8,12,8,309,1,2,1,2,high_intent
+U492,S492,beauty routine,beauty-care,6,5,5,164,1,2,0,0,medium_intent
+U493,S493,student device,work-tech,7,10,3,255,0,2,1,0,medium_intent
+U494,S494,bedside diffuser,home-living,2,4,1,80,0,0,1,0,low_intent
+U495,S495,kitchen prep,kitchen-dining,9,15,7,500,3,3,0,1,high_intent
+U496,S496,water bottle,wellness,7,11,3,281,2,1,0,0,medium_intent
+U497,S497,city trip bag,travel-everyday,7,5,5,190,0,1,1,0,medium_intent
+U498,S498,self care set,beauty-care,3,6,1,61,1,0,0,0,low_intent
+U499,S499,coding laptop,work-tech,4,6,2,73,0,0,0,0,low_intent
+U500,S500,diffuser,home-living,9,12,6,432,1,4,0,2,high_intent

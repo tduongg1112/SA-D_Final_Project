@@ -1,0 +1,833 @@
+% !TEX TS-program = xelatex
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[a4paper,margin=2.3cm]{geometry}
+\usepackage{fontspec}
+\defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\setmainfont{Libertinus Serif}
+\setsansfont{Libertinus Sans}
+\setmonofont{Latin Modern Mono}
+\usepackage{polyglossia}
+\setdefaultlanguage{vietnamese}
+
+\usepackage{amsmath}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{longtable}
+\usepackage{setspace}
+\usepackage[table]{xcolor}
+\usepackage{fancyhdr}
+
+\hypersetup{
+  hidelinks,
+  pdfborder={0 0 0},
+  bookmarksopen=true,
+  bookmarksnumbered=true
+}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.45em}
+\onehalfspacing
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{AI Service cho NovaMarket}
+\rhead{\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+
+\definecolor{codebg}{HTML}{F7F8FA}
+\definecolor{codeborder}{HTML}{D7DCE2}
+\definecolor{codered}{HTML}{A62639}
+\definecolor{codegreen}{HTML}{2E7D32}
+\definecolor{codeblue}{HTML}{1565C0}
+
+\lstdefinestyle{novacode}{
+  backgroundcolor=\color{codebg},
+  basicstyle=\ttfamily\scriptsize,
+  frame=single,
+  rulecolor=\color{codeborder},
+  breaklines=true,
+  breakatwhitespace=false,
+  showstringspaces=false,
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{codeblue},
+  stringstyle=\color{codegreen},
+  commentstyle=\color{codered},
+  columns=fullflexible
+}
+
+\lstset{style=novacode}
+\captionsetup{font=small,labelfont=bf}
+\setlist[itemize]{leftmargin=1.5em}
+\setlist[enumerate]{leftmargin=1.8em}
+
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcommand{\code}[1]{\texttt{\detokenize{#1}}}
+\newcommand{\statusdone}{\textbf{Hoàn thành}}
+\newcommand{\statusimg}{\textbf{Minh chứng ảnh}}
+
+\newcommand{\placeholderfigure}[3]{
+  \begin{figure}[H]
+    \centering
+    \IfFileExists{#1}{
+      \includegraphics[width=#2\textwidth]{#1}
+    }{
+      \fbox{
+        \parbox[c][5cm][c]{0.82\textwidth}{
+          \centering
+          Vị trí ảnh minh chứng\\
+          \code{#1}\\[0.4em]
+          Tệp ảnh sẽ được bổ sung trong thư mục \code{figures/}.
+        }
+      }
+    }
+    \caption{#3}
+  \end{figure}
+}
+
+\begin{document}
+
+\renewcommand{\contentsname}{MỤC LỤC}
+\tableofcontents
+\newpage
+
+\section{Mở đầu}
+
+\subsection{Phạm vi nghiên cứu}
+Nội dung báo cáo tập trung vào việc thiết kế, hiện thực và tích hợp \textit{AI Service} cho hệ thống thương mại điện tử NovaMarket. Phạm vi kỹ thuật gồm bốn hợp phần liên kết chặt chẽ:
+\begin{enumerate}[label=\arabic*.]
+  \item xây dựng tập dữ liệu hành vi người dùng \code{data_user500.csv};
+  \item huấn luyện và so sánh ba mô hình tuần tự \code{RNN}, \code{LSTM}, \code{biLSTM};
+  \item xây dựng \textit{Knowledge Base Graph} trên Neo4j;
+  \item triển khai \textit{Graph-RAG} và tích hợp vào các chức năng tìm kiếm, giỏ hàng và trợ lý mua sắm.
+\end{enumerate}
+
+\subsection{Mục tiêu triển khai}
+AI Service trong NovaMarket không được xem như một chatbot độc lập mà là một thành phần nghiệp vụ nằm trong kiến trúc microservices. Mục tiêu triển khai được xác định như sau:
+\begin{itemize}
+  \item phân tích tín hiệu hành vi để ước lượng mức độ ý định mua hàng;
+  \item tạo gợi ý sản phẩm theo ngữ cảnh tìm kiếm và giỏ hàng;
+  \item cung cấp lớp hội thoại có khả năng giải thích được nguồn tri thức sử dụng;
+  \item tích hợp toàn bộ luồng xử lý thông qua \code{API Gateway} thay vì gọi trực tiếp từ frontend.
+\end{itemize}
+
+\subsection{Kết quả chính}
+Hệ thống đã đạt được các kết quả kỹ thuật sau:
+\begin{itemize}
+  \item tập dữ liệu 500 mẫu với 8 đặc trưng hành vi đã được sinh và lưu trong repo;
+  \item notebook huấn luyện đã tạo ra \code{model_best.keras}, \code{scaler.pkl}, \code{label_encoder.pkl}, \code{metrics_summary.json};
+  \item AI Service đã load artifact thật tại runtime;
+  \item Neo4j đã được đưa vào \code{docker-compose.yml} và đồng bộ dữ liệu thành công;
+  \item Graph-RAG đã hoạt động qua các endpoint \code{/api/ai/recommend/search/}, \code{/api/ai/recommend/cart/}, \code{/api/ai/chat/};
+  \item frontend React đã tích hợp AI trên ba màn hình \code{/products}, \code{/cart}, \code{/assistant};
+  \item API Gateway đã proxy được toàn bộ route \code{/api/ai/*}.
+\end{itemize}
+
+\subsection{Đối chiếu yêu cầu và trạng thái thực hiện}
+\begin{table}[H]
+  \centering
+  \caption{Đối chiếu yêu cầu kỹ thuật và trạng thái hoàn thành}
+  \begin{tabular}{L{4.2cm}L{7.7cm}L{2.2cm}}
+    \toprule
+    \textbf{Hạng mục} & \textbf{Bằng chứng} & \textbf{Trạng thái} \\
+    \midrule
+    Sinh \code{data_user500.csv} & File dữ liệu 500 dòng, 8 hành vi, có cột ngữ cảnh và nhãn mục tiêu. & \statusdone \\
+    Huấn luyện \code{RNN/LSTM/biLSTM} & Có notebook, có metrics và artifact sau huấn luyện. & \statusdone \\
+    Chọn mô hình tốt nhất & \code{metrics_summary.json} xác nhận \code{RNN} là mô hình tốt nhất. & \statusdone \\
+    Xây dựng KB Graph & Neo4j hoạt động, có thống kê node và relationship qua API. & \statusdone \\
+    Triển khai Graph-RAG & Có \code{retrieval_context} và endpoint debug riêng cho retrieval. & \statusdone \\
+    Tích hợp vào e-commerce & Đã tích hợp vào trang sản phẩm, giỏ hàng và trợ lý hội thoại. & \statusdone \\
+    Bộ ảnh minh chứng & Vị trí chèn ảnh đã được chuẩn bị trong báo cáo. & \statusimg \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Kiến trúc triển khai}
+Kiến trúc tổng thể của lời giải được tổ chức theo chuỗi:
+\begin{center}
+  \textbf{React Frontend} $\rightarrow$ \textbf{API Gateway} $\rightarrow$ \textbf{FastAPI AI Service}
+  $\rightarrow$ (\textbf{Artifact Model} + \textbf{Neo4j KB Graph} + \textbf{Product Service})
+\end{center}
+
+Phương án này bảo đảm tính tái lập của hệ thống, cho phép chạy toàn bộ pipeline trong môi trường nội bộ của đồ án, đồng thời phản ánh đúng vai trò điều phối của API Gateway trong kiến trúc microservices.
+
+\section{Thiết kế dữ liệu hành vi người dùng}
+
+\subsection{Bài toán học máy}
+Bài toán được lựa chọn là \textbf{phân loại mức độ ý định mua hàng} thành ba lớp:
+\begin{itemize}
+  \item \code{low_intent},
+  \item \code{medium_intent},
+  \item \code{high_intent}.
+\end{itemize}
+
+Lựa chọn này phù hợp với nghiệp vụ thương mại điện tử vì đầu ra của mô hình có thể được dùng trực tiếp trong các chức năng gợi ý sản phẩm, ưu tiên hiển thị và hội thoại tư vấn mua sắm.
+
+\subsection{Tám đặc trưng hành vi}
+\begin{longtable}{L{4.0cm}L{2.8cm}L{7.1cm}}
+\toprule
+\textbf{Thuộc tính} & \textbf{Kiểu dữ liệu} & \textbf{Ý nghĩa} \\
+\midrule
+\endhead
+\code{search_count} & số nguyên & Số lần tìm kiếm sản phẩm trong phiên. \\
+\code{product_view_count} & số nguyên & Số lần xem thẻ hoặc danh sách sản phẩm. \\
+\code{detail_view_count} & số nguyên & Số lần truy cập trang chi tiết sản phẩm. \\
+\code{dwell_time_sec} & số nguyên & Tổng thời gian dừng trên trang sản phẩm, tính bằng giây. \\
+\code{add_wishlist_count} & số nguyên & Số lần thêm sản phẩm vào danh sách quan tâm. \\
+\code{add_to_cart_count} & số nguyên & Số lần thêm sản phẩm vào giỏ hàng. \\
+\code{remove_from_cart_count} & số nguyên & Số lần loại bỏ sản phẩm khỏi giỏ. \\
+\code{purchase_count} & số nguyên & Số lần phát sinh giao dịch hoàn tất. \\
+\bottomrule
+\end{longtable}
+
+\subsection{Các trường ngữ cảnh bổ sung}
+Để sử dụng chung cho cả huấn luyện mô hình và xây dựng KB Graph, file dữ liệu còn bao gồm:
+\begin{itemize}
+  \item \code{user_id},
+  \item \code{session_id},
+  \item \code{last_search_keyword},
+  \item \code{dominant_category},
+  \item \code{target_label}.
+\end{itemize}
+
+Nhờ cấu trúc này, tập dữ liệu vừa phục vụ giai đoạn học máy, vừa cung cấp thông tin trực tiếp để tạo các node và cạnh trong đồ thị tri thức.
+
+\subsection{Nguyên tắc sinh dữ liệu}
+Dataset được sinh theo hướng \textit{synthetic but structured}, nghĩa là dữ liệu được tạo nhân tạo nhưng có quy luật nghiệp vụ rõ ràng. Nhãn mục tiêu không được gán ngẫu nhiên mà được suy ra từ một \textit{intent score} phụ thuộc vào cường độ duyệt sản phẩm, hành vi thêm giỏ hàng, xóa giỏ hàng và số lần mua.
+
+Các tín hiệu làm tăng mức độ ý định mua mạnh nhất là:
+\begin{itemize}
+  \item \code{detail_view_count},
+  \item \code{dwell_time_sec},
+  \item \code{add_to_cart_count},
+  \item \code{purchase_count}.
+\end{itemize}
+
+\code{remove_from_cart_count} được sử dụng như một tín hiệu điều chỉnh theo hướng giảm mức quan tâm chuyển đổi.
+
+\subsection{Thống kê của tập dữ liệu}
+Kết quả thống kê trên \code{ai_service/data_user500.csv} cho thấy:
+\begin{itemize}
+  \item tổng số dòng dữ liệu: \textbf{500};
+  \item số keyword phân biệt: \textbf{48};
+  \item số category: \textbf{6};
+  \item phân bố nhãn:
+    \begin{itemize}
+      \item \code{high_intent}: 150,
+      \item \code{medium_intent}: 201,
+      \item \code{low_intent}: 149.
+    \end{itemize}
+\end{itemize}
+
+Phân bố category tương đối đồng đều:
+\begin{itemize}
+  \item \code{work-tech}: 84;
+  \item \code{wellness}: 84;
+  \item \code{travel-everyday}: 84;
+  \item \code{beauty-care}: 83;
+  \item \code{home-living}: 83;
+  \item \code{kitchen-dining}: 82.
+\end{itemize}
+
+Phân bố như trên giúp hạn chế lệch lớp quá mạnh, tạo điều kiện thuận lợi cho việc so sánh ba kiến trúc tuần tự.
+
+\placeholderfigure{figures/dataset_head_20rows.png}{0.88}{Hai mươi dòng đầu của file \code{data_user500.csv}}
+\placeholderfigure{figures/dataset_distribution.png}{0.82}{Phân bố nhãn và category trong dataset}
+
+\subsection{Trích 20 dòng đầu của dataset}
+\begin{lstlisting}[caption={Trích 20 dòng đầu của \code{data_user500.csv}}]
+user_id,session_id,last_search_keyword,dominant_category,search_count,product_view_count,detail_view_count,dwell_time_sec,add_wishlist_count,add_to_cart_count,remove_from_cart_count,purchase_count,target_label
+U001,S001,laptop,work-tech,6,12,5,410,1,2,0,1,high_intent
+U002,S002,desk lamp,work-tech,4,7,3,180,1,1,0,0,medium_intent
+U003,S003,yoga mat,wellness,5,9,4,320,1,2,1,1,high_intent
+U004,S004,water bottle,wellness,3,6,2,110,0,0,0,0,low_intent
+U005,S005,travel bag,travel-everyday,7,11,6,390,2,3,0,1,high_intent
+U006,S006,tote bag,travel-everyday,4,8,3,165,1,1,1,0,medium_intent
+U007,S007,skin care,beauty-care,5,10,5,300,2,2,0,0,medium_intent
+U008,S008,coffee press,kitchen-dining,2,5,2,95,0,0,0,0,low_intent
+U009,S009,diffuser,home-living,6,10,4,275,1,2,0,0,medium_intent
+U010,S010,blanket,home-living,2,4,1,70,0,0,0,0,low_intent
+U011,S011,laptop for study,work-tech,8,14,7,520,2,3,0,1,high_intent
+U012,S012,portable mirror,beauty-care,3,7,3,150,0,1,0,0,medium_intent
+U013,S013,bamboo board,kitchen-dining,2,6,2,105,0,0,0,0,low_intent
+U014,S014,hydration bottle,wellness,4,8,4,210,1,1,0,0,medium_intent
+U015,S015,overnight bag,travel-everyday,6,12,6,430,1,3,0,1,high_intent
+U016,S016,calm diffuser,home-living,5,9,4,260,1,1,1,0,medium_intent
+U017,S017,desk setup,work-tech,3,5,2,130,0,0,0,0,low_intent
+U018,S018,yoga home workout,wellness,7,13,6,470,2,2,0,1,high_intent
+U019,S019,travel tote,travel-everyday,4,7,3,175,0,1,0,0,medium_intent
+U020,S020,starter skincare,beauty-care,6,10,5,295,2,2,0,0,medium_intent
+\end{lstlisting}
+
+\section{Huấn luyện và so sánh mô hình tuần tự}
+
+\subsection{Môi trường và pipeline huấn luyện}
+Notebook \code{ai_service/notebooks/train_rnn_lstm_bilstm.ipynb} được sử dụng để huấn luyện mô hình trên Kaggle. Việc tách giai đoạn huấn luyện ra khỏi runtime giúp giảm phụ thuộc môi trường và tạo artifact cố định cho service.
+
+Pipeline huấn luyện gồm các bước:
+\begin{enumerate}[label=\arabic*.]
+  \item đọc tập dữ liệu;
+  \item chọn 8 đặc trưng hành vi làm đầu vào;
+  \item mã hóa nhãn bằng \code{LabelEncoder};
+  \item chuẩn hóa đặc trưng bằng \code{MinMaxScaler};
+  \item chia dữ liệu train, validation và test;
+  \item reshape dữ liệu thành tensor \code{(samples, 8, 1)};
+  \item huấn luyện ba kiến trúc \code{RNN}, \code{LSTM}, \code{biLSTM};
+  \item so sánh kết quả và chọn mô hình tốt nhất.
+\end{enumerate}
+
+\subsection{Kiến trúc mô hình}
+\begin{table}[H]
+  \centering
+  \caption{Ba kiến trúc được dùng trong thí nghiệm}
+  \begin{tabular}{L{2.4cm}L{10.1cm}}
+    \toprule
+    \textbf{Mô hình} & \textbf{Kiến trúc} \\
+    \midrule
+    RNN & \code{Input(8,1) -> SimpleRNN(64) -> Dropout(0.2) -> Dense(32, relu) -> Dense(3, softmax)} \\
+    LSTM & \code{Input(8,1) -> LSTM(64) -> Dropout(0.2) -> Dense(32, relu) -> Dense(3, softmax)} \\
+    biLSTM & \code{Input(8,1) -> Bidirectional(LSTM(64)) -> Dropout(0.3) -> Dense(32, relu) -> Dense(3, softmax)} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Mã khung huấn luyện}
+\begin{lstlisting}[language=Python,caption={Mã khung cho ba mô hình tuần tự}]
+from tensorflow.keras import Sequential, Input
+from tensorflow.keras.layers import Dense, Dropout, SimpleRNN, LSTM, Bidirectional
+
+def build_rnn(input_shape, num_classes):
+    model = Sequential([
+        Input(shape=input_shape),
+        SimpleRNN(64),
+        Dropout(0.2),
+        Dense(32, activation="relu"),
+        Dense(num_classes, activation="softmax"),
+    ])
+    return model
+
+def build_lstm(input_shape, num_classes):
+    model = Sequential([
+        Input(shape=input_shape),
+        LSTM(64),
+        Dropout(0.2),
+        Dense(32, activation="relu"),
+        Dense(num_classes, activation="softmax"),
+    ])
+    return model
+
+def build_bilstm(input_shape, num_classes):
+    model = Sequential([
+        Input(shape=input_shape),
+        Bidirectional(LSTM(64)),
+        Dropout(0.3),
+        Dense(32, activation="relu"),
+        Dense(num_classes, activation="softmax"),
+    ])
+    return model
+\end{lstlisting}
+
+\subsection{Độ đo đánh giá}
+Các độ đo được sử dụng trong thí nghiệm gồm:
+\begin{itemize}
+  \item Accuracy;
+  \item Loss;
+  \item Macro Precision;
+  \item Macro Recall;
+  \item Macro F1.
+\end{itemize}
+
+\textit{Macro F1} được chọn làm tiêu chí so sánh chính vì nó phản ánh đồng đều hiệu năng trên cả ba lớp mục tiêu.
+
+\subsection{Kết quả thực nghiệm}
+Kết quả dưới đây được trích trực tiếp từ \code{services/ai_service/artifacts/metrics_summary.json}:
+
+\begin{table}[H]
+  \centering
+  \caption{Kết quả thực nghiệm của ba mô hình}
+  \begin{tabular}{L{2.2cm}ccccc}
+    \toprule
+    \textbf{Mô hình} & \textbf{Accuracy} & \textbf{Loss} & \textbf{Macro Precision} & \textbf{Macro Recall} & \textbf{Macro F1} \\
+    \midrule
+    RNN & 1.0000 & 0.0227 & 1.0000 & 1.0000 & 1.0000 \\
+    LSTM & 0.9600 & 0.0965 & 0.9697 & 0.9552 & 0.9608 \\
+    biLSTM & 0.9733 & 0.0708 & 0.9792 & 0.9704 & 0.9741 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Theo số liệu thực nghiệm, \code{RNN} là mô hình được chọn làm \code{best_model}. Trong bối cảnh dataset hiện tại, điều này cho thấy cấu trúc đặc trưng đủ tách lớp để một mô hình tuần tự tương đối gọn vẫn đạt hiệu năng cao.
+
+\placeholderfigure{figures/training_curves.png}{0.86}{Đồ thị loss và accuracy của ba mô hình}
+\placeholderfigure{figures/model_comparison.png}{0.84}{Biểu đồ so sánh các độ đo giữa RNN, LSTM và biLSTM}
+\placeholderfigure{figures/confusion_matrix_rnn.png}{0.72}{Confusion matrix của mô hình tốt nhất}
+
+\subsection{Artifact sau huấn luyện}
+Bốn artifact chính được dùng ở runtime gồm:
+\begin{itemize}
+  \item \code{model_best.keras};
+  \item \code{scaler.pkl};
+  \item \code{label_encoder.pkl};
+  \item \code{metrics_summary.json}.
+\end{itemize}
+
+\placeholderfigure{figures/artifacts_folder.png}{0.78}{Thư mục artifact sau khi xuất từ môi trường huấn luyện}
+
+\section{Triển khai AI Service thành API}
+
+\subsection{Kiến trúc module}
+AI Service được triển khai bằng FastAPI. Cấu trúc module được tách theo trách nhiệm để tránh tập trung toàn bộ logic vào một file duy nhất.
+
+\begin{table}[H]
+  \centering
+  \caption{Các module chính của \code{services/ai_service/}}
+  \begin{tabular}{L{3.6cm}L{8.8cm}}
+    \toprule
+    \textbf{Module} & \textbf{Vai trò} \\
+    \midrule
+    \code{main.py} & Định nghĩa application, endpoint và health check. \\
+    \code{app_config.py} & Quản lý biến môi trường, đường dẫn dataset, artifact và Neo4j. \\
+    \code{model_loader.py} & Nạp mô hình, scaler, label encoder và metrics. \\
+    \code{intelligence.py} & Suy diễn intent, chấm điểm và xếp hạng sản phẩm. \\
+    \code{graph_store.py} & Kết nối Neo4j, đồng bộ và truy vấn KB Graph. \\
+    \code{catalog_client.py} & Lấy dữ liệu sản phẩm từ \code{product-service}. \\
+    \code{schemas.py} & Khai báo request/response model cho API. \\
+    \code{rebuild_kb_graph.py} & Tiện ích đồng bộ lại KB Graph từ CLI. \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Các endpoint chính}
+\begin{table}[H]
+  \centering
+  \caption{Danh sách endpoint của AI Service}
+  \begin{tabular}{L{4.7cm}L{7.8cm}}
+    \toprule
+    \textbf{Endpoint} & \textbf{Chức năng} \\
+    \midrule
+    \code{GET /health} & Kiểm tra trạng thái service, model và graph. \\
+    \code{POST /api/ai/predict-intent/} & Dự đoán intent từ 8 tín hiệu hành vi. \\
+    \code{POST /api/ai/recommend/search/} & Gợi ý sản phẩm theo từ khóa tìm kiếm. \\
+    \code{POST /api/ai/recommend/cart/} & Gợi ý sản phẩm bổ sung cho giỏ hàng. \\
+    \code{POST /api/ai/chat/} & Trợ lý hội thoại theo ngữ cảnh mua sắm. \\
+    \code{POST /api/ai/events/} & Ghi nhận event phiên ở mức runtime. \\
+    \code{POST /api/ai/graph/rebuild/} & Đồng bộ lại KB Graph. \\
+    \code{GET /api/ai/graph/status/} & Xem tình trạng kết nối Neo4j và thống kê đồ thị. \\
+    \code{POST /api/ai/graph/context/} & Trả về retrieval context để kiểm thử Graph-RAG. \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Trạng thái runtime}
+Health check của service hiện trả về:
+\begin{itemize}
+  \item \code{model.backend = artifact_model},
+  \item \code{model.ready = true},
+  \item \code{best_model = RNN},
+  \item \code{graph.backend = neo4j},
+  \item \code{graph.ready = true}.
+\end{itemize}
+
+Thông tin này xác nhận AI Service đang sử dụng artifact thật và đang kết nối được với KB Graph.
+
+\subsection{Ví dụ code ở tầng route}
+\begin{lstlisting}[language=Python,caption={Đoạn code đại diện của tầng route}]
+@app.get("/health")
+def health_check():
+    return {
+        "status": "ok",
+        "service": settings.service_name,
+        "dataset_loaded": dataset_store.insights.total_rows,
+        "model": artifact_bundle.summary(),
+        "graph": graph_store.summary(),
+    }
+
+@app.get("/api/ai/graph/status/", response_model=GraphStatusResponse)
+def graph_status():
+    summary = graph_store.summary()
+    overview = graph_store.overview()
+    return GraphStatusResponse(
+        backend=summary["backend"],
+        ready=summary["ready"],
+        uri=summary["uri"],
+        load_error=summary["load_error"],
+        node_counts=overview["node_counts"],
+        relationship_counts=overview["relationship_counts"],
+    )
+\end{lstlisting}
+
+\placeholderfigure{figures/ai_service_health.png}{0.82}{Kết quả \code{/health} của AI Service}
+
+\section{Knowledge Base Graph trên Neo4j}
+
+\subsection{Mô hình đồ thị}
+KB Graph được xây dựng từ hai nguồn dữ liệu:
+\begin{itemize}
+  \item dữ liệu hành vi trong \code{data_user500.csv};
+  \item dữ liệu tri thức sản phẩm và category trong codebase.
+\end{itemize}
+
+Các node chính:
+\begin{itemize}
+  \item \code{User},
+  \item \code{Session},
+  \item \code{Keyword},
+  \item \code{Category},
+  \item \code{Intent},
+  \item \code{Product}.
+\end{itemize}
+
+Các quan hệ chính:
+\begin{itemize}
+  \item \code{HAS_SESSION},
+  \item \code{SEARCHED},
+  \item \code{INTERESTED_IN},
+  \item \code{HAS_INTENT},
+  \item \code{RELATES_TO},
+  \item \code{CONTAINS},
+  \item \code{COMPLEMENTS},
+  \item \code{RELATED_TO}.
+\end{itemize}
+
+\subsection{Vai trò của đồ thị tri thức}
+Đồ thị tri thức được sử dụng như tầng biểu diễn và truy xuất tri thức phục vụ recommendation. Khác với bảng dữ liệu phẳng, KB Graph cho phép liên kết trực tiếp:
+\begin{itemize}
+  \item hành vi tìm kiếm với keyword;
+  \item keyword với category;
+  \item category với sản phẩm;
+  \item sản phẩm với sản phẩm bổ sung;
+  \item session với intent quan sát được.
+\end{itemize}
+
+\subsection{Triển khai trong Docker Compose}
+Neo4j được triển khai như một service riêng trong \code{docker-compose.yml}. AI Service kết nối tới Neo4j thông qua các biến môi trường:
+\begin{lstlisting}[language=Python,caption={Biến môi trường phục vụ KB Graph}]
+NEO4J_URI=bolt://neo4j:7687
+NEO4J_USER=neo4j
+NEO4J_PASSWORD=novamarket123
+AI_GRAPH_AUTO_SYNC=1
+\end{lstlisting}
+
+\subsection{Kết quả đồng bộ thực tế}
+Kết quả thu được từ endpoint \code{/api/ai/graph/status/} sau khi stack khởi động:
+\begin{itemize}
+  \item \code{backend = neo4j};
+  \item \code{ready = true};
+  \item số node:
+    \begin{itemize}
+      \item \code{Category}: 6,
+      \item \code{Intent}: 3,
+      \item \code{Keyword}: 48,
+      \item \code{Product}: 12,
+      \item \code{Session}: 500,
+      \item \code{User}: 500.
+    \end{itemize}
+  \item số relationship:
+    \begin{itemize}
+      \item \code{COMPLEMENTS}: 28,
+      \item \code{CONTAINS}: 12,
+      \item \code{HAS_INTENT}: 500,
+      \item \code{HAS_SESSION}: 500,
+      \item \code{INTERESTED_IN}: 500,
+      \item \code{RELATED_TO}: 12,
+      \item \code{RELATES_TO}: 48,
+      \item \code{SEARCHED}: 500.
+    \end{itemize}
+\end{itemize}
+
+\begin{table}[H]
+  \centering
+  \caption{Tóm tắt thống kê KB Graph}
+  \begin{tabular}{L{5.0cm}L{7.2cm}}
+    \toprule
+    \textbf{Thuộc tính} & \textbf{Giá trị} \\
+    \midrule
+    Backend đồ thị & \code{neo4j} \\
+    Kết nối & \code{true} \\
+    Node \code{User} & 500 \\
+    Node \code{Session} & 500 \\
+    Node \code{Keyword} & 48 \\
+    Node \code{Category} & 6 \\
+    Node \code{Product} & 12 \\
+    Node \code{Intent} & 3 \\
+    Nhóm quan hệ chính & \code{SEARCHED}, \code{INTERESTED_IN}, \code{HAS_INTENT}, \code{CONTAINS}, \code{COMPLEMENTS}, \code{RELATED_TO} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\placeholderfigure{figures/neo4j_browser_login.png}{0.78}{Màn hình đăng nhập Neo4j Browser}
+\placeholderfigure{figures/neo4j_graph_overview.png}{0.84}{Trực quan hóa KB Graph trên Neo4j}
+\placeholderfigure{figures/graph_status_api.png}{0.82}{Kết quả \code{/api/ai/graph/status/}}
+
+\section{Graph-RAG và trợ lý hội thoại}
+
+\subsection{Lựa chọn Graph-RAG deterministic}
+Giải pháp được lựa chọn là \textit{Graph-RAG deterministic}. Cách tiếp cận này chia bài toán thành ba bước:
+\begin{enumerate}[label=\arabic*.]
+  \item \textbf{Retrieve}: truy xuất context từ KB Graph;
+  \item \textbf{Augment}: ghép thêm metadata sản phẩm và tín hiệu hành vi;
+  \item \textbf{Generate}: tạo phản hồi bằng template có kiểm soát.
+\end{enumerate}
+
+Lựa chọn này phù hợp với phạm vi đồ án do có tính ổn định cao, dễ giải thích trong báo cáo và không phụ thuộc vào dịch vụ LLM bên ngoài.
+
+\subsection{Luồng xử lý}
+Ba luồng nghiệp vụ hiện sử dụng Graph-RAG:
+\begin{enumerate}[label=\arabic*.]
+  \item \textbf{Search recommendation}: từ khóa tìm kiếm được ánh xạ sang keyword, category và product candidate.
+  \item \textbf{Cart recommendation}: cart slugs được ánh xạ sang product complement và category liên quan.
+  \item \textbf{Assistant chat}: truy vấn ngôn ngữ tự nhiên được kết hợp với context của giỏ hàng để sinh phản hồi.
+\end{enumerate}
+
+Tại tầng API, response của các endpoint này đều chứa \code{retrieval_context} gồm:
+\begin{itemize}
+  \item \code{backend},
+  \item \code{matched_category},
+  \item \code{supporting_keywords},
+  \item \code{related_categories},
+  \item \code{observed_intents},
+  \item \code{retrieved_product_slugs},
+  \item \code{retrieved_product_names},
+  \item \code{evidence}.
+\end{itemize}
+
+\subsection{Ví dụ retrieval context}
+\begin{lstlisting}[language=Python,caption={Ví dụ response thực từ \code{/api/ai/graph/context/}}]
+{
+  "backend": "neo4j",
+  "matched_category": "work-tech",
+  "supporting_keywords": [
+    "laptop",
+    "laptop for study",
+    "portable workstation",
+    "coding laptop"
+  ],
+  "related_categories": ["travel-everyday", "wellness"],
+  "observed_intents": ["high_intent", "medium_intent", "low_intent"],
+  "retrieved_product_slugs": [
+    "novabook-flex-13",
+    "luma-desk-light",
+    "puresip-bottle",
+    "transit-weekender"
+  ],
+  "evidence": [
+    "Graph keyword matches point most strongly to Work Tech.",
+    "Observed intents in the graph for this category are high_intent, medium_intent, low_intent.",
+    "Graph complement edges suggest luma-desk-light, puresip-bottle, transit-weekender for the current cart."
+  ]
+}
+\end{lstlisting}
+
+\subsection{Ví dụ response của search recommendation}
+\begin{lstlisting}[language=Python,caption={Ví dụ response thực từ \code{/api/ai/recommend/search/}}]
+{
+  "answer": "AI matched the search to work-tech with medium intent. Graph keyword matches point most strongly to Work Tech. Start with NovaBook Flex 13 and Luma Desk Light.",
+  "predicted_intent": {
+    "label": "medium_intent",
+    "confidence": 0.997
+  },
+  "matched_category": "work-tech",
+  "retrieval_context": {
+    "backend": "neo4j",
+    "retrieved_product_names": [
+      "NovaBook Flex 13",
+      "Luma Desk Light"
+    ]
+  },
+  "recommended_products": [
+    {"slug": "novabook-flex-13", "score": 9.5},
+    {"slug": "luma-desk-light", "score": 8.2}
+  ]
+}
+\end{lstlisting}
+
+\placeholderfigure{figures/graph_context_api.png}{0.82}{Kết quả \code{/api/ai/graph/context/}}
+\placeholderfigure{figures/chat_pipeline.png}{0.86}{Sơ đồ luồng Graph-RAG}
+
+\section{Tích hợp vào hệ e-commerce}
+
+\subsection{Tích hợp qua API Gateway}
+Frontend giao tiếp với AI thông qua \code{api-gateway}; không có route frontend nào gọi trực tiếp \code{ai-service}. Quy tắc định tuyến chính:
+\begin{center}
+  \code{/api/ai/{path:path}} $\rightarrow$ \code{ai-service:8001}
+\end{center}
+
+Cách tổ chức này giúp giữ nguyên vai trò của API Gateway như một điểm vào thống nhất cho toàn bộ hệ thống.
+
+\subsection{Tích hợp vào trang sản phẩm}
+Trang \code{/products} sử dụng endpoint:
+\begin{center}
+  \code{POST /api/ai/recommend/search/}
+\end{center}
+
+AI đóng vai trò lớp bổ sung cho kết quả catalog, không thay thế danh sách sản phẩm gốc. Response trả về bao gồm intent prediction, category khớp nhất, evidence từ graph và danh sách sản phẩm được xếp hạng.
+
+\subsection{Tích hợp vào giỏ hàng}
+Trang \code{/cart} sử dụng endpoint:
+\begin{center}
+  \code{POST /api/ai/recommend/cart/}
+\end{center}
+
+Payload đầu vào chứa danh sách item thực trong giỏ hàng. Từ đó hệ thống suy ra các sản phẩm bổ sung dựa trên cạnh \code{COMPLEMENTS}, category liên quan và tín hiệu hành vi mua sắm.
+
+\subsection{Tích hợp vào trợ lý hội thoại}
+Trang \code{/assistant} được chuyển từ placeholder sang giao diện trợ lý mua sắm. Giao diện mới gồm:
+\begin{itemize}
+  \item vùng hội thoại;
+  \item vùng hiển thị recommendation;
+  \item prompt starter theo ngữ cảnh thương mại điện tử;
+  \item panel thể hiện evidence, related categories và retrieved products.
+\end{itemize}
+
+\subsection{Ánh xạ trang và endpoint}
+\begin{table}[H]
+  \centering
+  \caption{Ánh xạ giữa giao diện và endpoint AI}
+  \begin{tabular}{L{3.1cm}L{4.6cm}L{5.2cm}}
+    \toprule
+    \textbf{Trang} & \textbf{Endpoint} & \textbf{Mục đích} \\
+    \midrule
+    \code{/products} & \code{/api/ai/recommend/search/} & Gợi ý sản phẩm theo truy vấn tìm kiếm. \\
+    \code{/cart} & \code{/api/ai/recommend/cart/} & Gợi ý sản phẩm bổ sung và sản phẩm thường đi kèm. \\
+    \code{/assistant} & \code{/api/ai/chat/} & Trả lời truy vấn và đề xuất sản phẩm theo ngữ cảnh. \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\placeholderfigure{figures/products_ai_panel.png}{0.86}{Panel AI trên trang \code{/products}}
+\placeholderfigure{figures/cart_ai_panel.png}{0.86}{Panel AI trên trang \code{/cart}}
+\placeholderfigure{figures/assistant_ai_chat.png}{0.86}{Giao diện trợ lý hội thoại trên \code{/assistant}}
+
+\section{Kiểm thử và xác nhận triển khai}
+
+\subsection{Kết quả từ AI Service}
+Khi gọi \code{GET /health}, hệ thống trả về:
+\begin{itemize}
+  \item \code{status = ok};
+  \item \code{dataset_loaded = 500};
+  \item \code{model.backend = artifact_model};
+  \item \code{model.ready = true};
+  \item \code{best_model = RNN};
+  \item \code{graph.backend = neo4j};
+  \item \code{graph.ready = true}.
+\end{itemize}
+
+Thông tin này xác nhận đồng thời hai điều kiện quan trọng: mô hình đã được load thành công từ artifact và kết nối tới KB Graph đang sẵn sàng ở runtime.
+
+\subsection{Kết quả từ API Gateway}
+Khi gọi \code{GET /gateway/health}, gateway ghi nhận toàn bộ service trọng yếu đều ở trạng thái \code{healthy}, bao gồm:
+\begin{itemize}
+  \item \code{web-frontend},
+  \item \code{product-service},
+  \item \code{cart-service},
+  \item \code{ordering-service},
+  \item \code{payment-service},
+  \item \code{shipping-service},
+  \item \code{ai-service}.
+\end{itemize}
+
+\subsection{Các kịch bản đã xác nhận}
+Ba kịch bản chính đã được xác nhận hoạt động:
+\begin{enumerate}[label=\arabic*.]
+  \item truy vấn tìm kiếm \code{laptop for study and portable work} trả về \code{NovaBook Flex 13} và \code{Luma Desk Light};
+  \item cart chứa \code{NovaBook Flex 13} trả về các gợi ý bổ sung như \code{Transit Weekender} và \code{Luma Desk Light};
+  \item trợ lý hội thoại trả về phản hồi có evidence từ graph và shortlist sản phẩm phù hợp.
+\end{enumerate}
+
+\subsection{Nhận xét}
+Từ góc độ triển khai hệ thống, yêu cầu tích hợp AI vào hệ e-commerce đã được đáp ứng ở cả ba tầng:
+\begin{itemize}
+  \item tầng service;
+  \item tầng gateway;
+  \item tầng giao diện người dùng.
+\end{itemize}
+
+\placeholderfigure{figures/gateway_health.png}{0.84}{Kết quả \code{/gateway/health}}
+\placeholderfigure{figures/search_api_response.png}{0.84}{Response thực của search recommendation}
+\placeholderfigure{figures/cart_api_response.png}{0.84}{Response thực của cart recommendation}
+\placeholderfigure{figures/chat_api_response.png}{0.84}{Response thực của chat endpoint}
+
+\section{Đánh giá và hướng phát triển}
+
+\subsection{Ưu điểm của lời giải}
+Lời giải hiện tại có bốn ưu điểm chính:
+\begin{itemize}
+  \item bám sát yêu cầu từ dữ liệu, học máy, tri thức đồ thị đến tích hợp hệ thống;
+  \item sử dụng artifact mô hình thật thay vì mô phỏng suy luận;
+  \item triển khai KB Graph thật với thống kê đồ thị rõ ràng;
+  \item đưa được AI vào các luồng nghiệp vụ có giá trị trực tiếp đối với thương mại điện tử.
+\end{itemize}
+
+\subsection{Hạn chế}
+Một số hạn chế vẫn cần được ghi nhận:
+\begin{enumerate}[label=\arabic*.]
+  \item dataset hiện là synthetic, do đó mức độ phức tạp chưa phản ánh đầy đủ hành vi thực tế;
+  \item Graph-RAG hiện sử dụng deterministic generation, chưa có tầng diễn đạt ngôn ngữ bằng LLM;
+  \item knowledge base sản phẩm vẫn ở quy mô nhỏ, giới hạn trong catalog mẫu của NovaMarket;
+  \item event logging mới tồn tại ở mức bộ nhớ runtime, chưa lưu vết lâu dài để huấn luyện lại.
+\end{enumerate}
+
+\subsection{Hướng phát triển}
+Các hướng mở rộng phù hợp cho giai đoạn tiếp theo gồm:
+\begin{itemize}
+  \item thu thập log hành vi thực để thay thế dần dữ liệu synthetic;
+  \item huấn luyện lại mô hình theo chu kỳ;
+  \item mở rộng retrieval theo hướng hybrid giữa graph và vector store;
+  \item bổ sung tầng sinh ngôn ngữ tự nhiên cho trợ lý hội thoại;
+  \item lưu event người dùng vào storage chuyên dụng để phục vụ phân tích dài hạn.
+\end{itemize}
+
+\section{Danh mục ảnh minh chứng}
+
+Các vị trí trong báo cáo đã được chuẩn bị sẵn. Chỉ cần bổ sung ảnh vào thư mục \code{figures/} với đúng tên tệp dưới đây:
+\begin{longtable}{L{4.8cm}L{7.0cm}}
+\toprule
+\textbf{Tên tệp ảnh} & \textbf{Nội dung minh chứng} \\
+\midrule
+\endhead
+\code{dataset_head_20rows.png} & Hai mươi dòng đầu của file \code{data_user500.csv}. \\
+\code{dataset_distribution.png} & Phân bố nhãn và category của dataset. \\
+\code{training_curves.png} & Đồ thị loss và accuracy của ba mô hình. \\
+\code{model_comparison.png} & Biểu đồ so sánh metrics giữa RNN, LSTM và biLSTM. \\
+\code{confusion_matrix_rnn.png} & Confusion matrix của mô hình tốt nhất. \\
+\code{artifacts_folder.png} & Ảnh thư mục artifact sau huấn luyện. \\
+\code{ai_service_health.png} & Kết quả \code{/health} của AI Service. \\
+\code{neo4j_browser_login.png} & Màn hình đăng nhập Neo4j Browser. \\
+\code{neo4j_graph_overview.png} & Trực quan hóa KB Graph trên Neo4j. \\
+\code{graph_status_api.png} & Kết quả \code{/api/ai/graph/status/}. \\
+\code{graph_context_api.png} & Kết quả \code{/api/ai/graph/context/}. \\
+\code{chat_pipeline.png} & Sơ đồ hoặc ảnh minh họa luồng Graph-RAG. \\
+\code{products_ai_panel.png} & Panel AI trên trang sản phẩm. \\
+\code{cart_ai_panel.png} & Panel AI trên trang giỏ hàng. \\
+\code{assistant_ai_chat.png} & Giao diện trợ lý hội thoại. \\
+\code{gateway_health.png} & Kết quả \code{/gateway/health}. \\
+\code{search_api_response.png} & Response thực của search recommendation. \\
+\code{cart_api_response.png} & Response thực của cart recommendation. \\
+\code{chat_api_response.png} & Response thực của chat endpoint. \\
+\bottomrule
+\end{longtable}
+
+\section{Kết luận}
+Báo cáo đã trình bày một quy trình khép kín cho AI Service trong NovaMarket, từ thiết kế dữ liệu, huấn luyện mô hình, xây dựng KB Graph, triển khai Graph-RAG đến tích hợp vào hệ thương mại điện tử.
+
+Kết quả triển khai cho thấy hệ thống đã đáp ứng đầy đủ các hạng mục kỹ thuật cốt lõi:
+\begin{itemize}
+  \item dữ liệu hành vi đã được chuẩn hóa thành tập huấn luyện riêng;
+  \item mô hình tuần tự đã được đánh giá bằng số liệu thực nghiệm;
+  \item Neo4j đã được sử dụng như một tầng tri thức có thể truy xuất;
+  \item AI Service đã vận hành như một microservice thật;
+  \item các chức năng tìm kiếm, giỏ hàng và hội thoại đã được tích hợp vào hệ e-commerce hiện tại.
+\end{itemize}
+
+Do đó, phần việc còn lại chủ yếu thuộc về khâu trình bày minh chứng và hoàn thiện bản nộp. Về mặt nội dung học thuật và triển khai kỹ thuật, hệ thống đã đạt mức sẵn sàng để sử dụng làm báo cáo chính thức cho phần AI Service.
+
+\end{document}
