@@ -1,52 +1,148 @@
 {% extends "layouts/base.html" %}
 
-{% block title %}NovaMarket | Frontend Reset{% endblock %}
+{% block title %}Home{% endblock %}
 
 {% block content %}
-<section class="reset-card">
-    <span class="eyebrow">NovaMarket</span>
-    <h1>Frontend has been cleared.</h1>
-    <p>
-        The previous storefront implementation was removed so the next frontend can be rebuilt from a clean slate.
-        Backend contracts are still intact, but the UI layer is intentionally back to placeholder state.
-    </p>
-    <div class="reset-actions">
-        <a class="button button-primary" href="{% url 'catalog:product-list' %}">View placeholder products</a>
-        <a class="button button-secondary" href="{% url 'cart:detail' %}">Open placeholder cart</a>
-        <a class="button button-secondary" href="/gateway/">Open placeholder gateway</a>
+
+<!-- ─── HERO ─── -->
+<section class="hero">
+    <div class="hero-inner">
+        <div class="hero-copy">
+            <span class="eyebrow hero-eyebrow">New arrivals this season</span>
+            <h1>Shop smarter with <em>AI-powered</em> recommendations</h1>
+            <p class="hero-desc">
+                Discover curated products across tech, home, wellness, and more.
+                Our AI assistant helps you find exactly what you need.
+            </p>
+            <div class="hero-actions">
+                <a class="btn btn-primary btn-lg" href="{% url 'catalog:product-list' %}">
+                    Browse all products
+                </a>
+                <button class="btn btn-lg" type="button" id="hero-chat-btn"
+                    onclick="document.getElementById('chat-fab').click()">
+                    ✦ Ask Nova AI
+                </button>
+            </div>
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <strong>12+</strong>
+                    <span>Products</span>
+                </div>
+                <div class="hero-stat">
+                    <strong>6</strong>
+                    <span>Categories</span>
+                </div>
+                <div class="hero-stat">
+                    <strong>AI</strong>
+                    <span>Recommendations</span>
+                </div>
+            </div>
+        </div>
+        <div class="hero-visual">
+            {% if featured_products %}
+                <img
+                    src="{{ featured_products.0.image_url }}"
+                    alt="{{ featured_products.0.image_alt|default:'Featured product' }}"
+                    loading="eager"
+                >
+            {% else %}
+                <div class="hero-visual-placeholder">
+                    <span style="font-size:3rem">🛍</span>
+                    <span class="eyebrow">NovaMarket</span>
+                </div>
+            {% endif %}
+            <div class="hero-badge">
+                <span style="color:var(--accent-dark)">✦</span>
+                AI shopping assistant available
+            </div>
+        </div>
     </div>
 </section>
 
-<section class="reset-grid">
-    <article class="reset-card">
-        <span class="eyebrow">Current state</span>
-        <h2>UI removed</h2>
-        <p>All major templates and styling were flattened into temporary placeholders.</p>
-    </article>
-    <article class="reset-card">
-        <span class="eyebrow">Data contract</span>
-        <h2>Still connected</h2>
-        <p>Product, cart, ordering, payment, and shipping services remain available behind the same backend flow.</p>
-    </article>
-    <article class="reset-card">
-        <span class="eyebrow">Next step</span>
-        <h2>Awaiting direction</h2>
-        <p>Provide the new IA, page hierarchy, and visual system, then the frontend can be rebuilt from zero.</p>
-    </article>
-</section>
-
-<section class="reset-card">
-    <span class="eyebrow">Available data</span>
-    <h2>Seed data is still visible in placeholder form.</h2>
-    <div class="reset-grid">
-        {% for product in latest_products %}
-            {% include "components/product_card.html" with product=product %}
-        {% empty %}
-            <article class="reset-tile">
-                <strong>No products loaded</strong>
-                <p>Product service data will appear here after the new frontend is designed.</p>
-            </article>
+<!-- ─── CATEGORIES ─── -->
+{% if categories %}
+<section class="page-section">
+    <div class="section-header">
+        <h2>Shop by category</h2>
+        <a href="{% url 'catalog:product-list' %}">View all →</a>
+    </div>
+    <div class="category-grid">
+        {% for category in categories %}
+        <a href="{% url 'catalog:product-list' %}?category={{ category.slug }}" class="category-card">
+            {% if category.image_url %}
+                <img src="{{ category.image_url }}" alt="{{ category.image_alt|default:category.name }}" loading="lazy">
+            {% endif %}
+            <div class="category-card-overlay"></div>
+            <div class="category-card-info">
+                <strong>{{ category.name }}</strong>
+                {% if category.hero_note %}<small>{{ category.hero_note }}</small>{% endif %}
+            </div>
+            {% if category.product_count %}
+                <span class="category-card-count">{{ category.product_count }}</span>
+            {% endif %}
+        </a>
         {% endfor %}
     </div>
 </section>
+{% endif %}
+
+<!-- ─── FEATURED PRODUCTS ─── -->
+{% if featured_products %}
+<section class="page-section">
+    <div class="section-header">
+        <h2>Featured picks</h2>
+        <a href="{% url 'catalog:product-list' %}">See all →</a>
+    </div>
+    <div class="product-grid product-grid-3">
+        {% for product in featured_products %}
+            {% include "components/product_card.html" with product=product %}
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+<!-- ─── LATEST PRODUCTS ─── -->
+{% if latest_products %}
+<section class="page-section">
+    <div class="section-header">
+        <h2>New arrivals</h2>
+        <a href="{% url 'catalog:product-list' %}">Browse all →</a>
+    </div>
+    <div class="product-grid">
+        {% for product in latest_products %}
+            {% include "components/product_card.html" with product=product %}
+        {% empty %}
+            <div class="empty-state" style="grid-column:1/-1">
+                <span class="empty-state-icon">📦</span>
+                <h3>No products yet</h3>
+                <p>Products will appear here once the catalog service is running.</p>
+            </div>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+<!-- ─── AI PROMO BANNER ─── -->
+<section class="page-section">
+    <div class="card" style="background:linear-gradient(135deg,var(--accent-bg) 0%,var(--surface) 100%);border-color:rgba(24,226,153,0.2);display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;">
+        <div>
+            <span class="eyebrow">Nova AI</span>
+            <h2 style="font-size:1.4rem;margin-top:8px;margin-bottom:10px">
+                Not sure what to buy?
+            </h2>
+            <p style="color:var(--text-muted);max-width:480px">
+                Tell our AI assistant what you're looking for and it will find the best
+                products for you across all categories.
+            </p>
+        </div>
+        <button
+            class="btn btn-primary btn-lg"
+            type="button"
+            onclick="document.getElementById('chat-fab').click()"
+        >
+            ✦ Chat with Nova
+        </button>
+    </div>
+</section>
+
 {% endblock %}

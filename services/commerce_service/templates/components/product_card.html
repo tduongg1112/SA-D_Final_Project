@@ -1,8 +1,33 @@
-<article class="reset-tile">
-    <strong>{{ product.name }}</strong>
-    <p>{{ product.short_description|default:"Frontend placeholder state." }}</p>
-    <div class="reset-inline">
-        <span class="eyebrow">{{ product.category.name|default:"Category" }}</span>
-        <span class="mono">${{ product.price }}</span>
+<article class="product-card">
+    <a href="{% url 'catalog:product-detail' slug=product.slug %}" class="product-card-image" tabindex="-1" aria-hidden="true">
+        {% if product.image_url %}
+            <img src="{{ product.image_url }}" alt="{{ product.image_alt|default:product.name }}" loading="lazy">
+        {% else %}
+            <div class="product-card-image-placeholder">🛍</div>
+        {% endif %}
+        {% if product.featured %}
+            <span class="product-card-badge pill pill-accent">Featured</span>
+        {% endif %}
+    </a>
+    <div class="product-card-body">
+        <span class="product-card-category eyebrow">
+            {{ product.category.name|default:"" }}
+        </span>
+        <a href="{% url 'catalog:product-detail' slug=product.slug %}" class="product-card-name">
+            {{ product.name }}
+        </a>
+        {% if product.short_description %}
+            <p class="product-card-desc">{{ product.short_description }}</p>
+        {% endif %}
+        <div class="product-card-footer">
+            <span class="product-card-price">${{ product.price }}</span>
+            <form method="post" action="{% url 'cart:add' product_id=product.id %}" style="margin:0">
+                {% csrf_token %}
+                <button class="product-card-action js-add-cart" type="submit"
+                    data-original-text="+" title="Add to cart" aria-label="Add {{ product.name }} to cart">
+                    +
+                </button>
+            </form>
+        </div>
     </div>
 </article>

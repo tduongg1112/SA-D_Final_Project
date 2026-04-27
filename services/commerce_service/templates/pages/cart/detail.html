@@ -1,49 +1,182 @@
 {% extends "layouts/base.html" %}
 
-{% block title %}NovaMarket | Cart Reset{% endblock %}
+{% block title %}Shopping Cart{% endblock %}
 
 {% block content %}
-<section class="reset-card">
-    <span class="eyebrow">Cart reset</span>
-    <h1>Checkout frontend has been cleared.</h1>
-    <p>
-        The cart and checkout UI has been intentionally flattened into a temporary placeholder.
-        The underlying cart and ordering routes are still in place for the rebuild that comes next.
-    </p>
-    <div class="reset-meta">
-        <div class="reset-tile">
-            <strong>Item count</strong>
-            <p>{{ cart.item_count }}</p>
-        </div>
-        <div class="reset-tile">
-            <strong>Total</strong>
-            <p>${{ cart.total }}</p>
-        </div>
-    </div>
-</section>
+
+<div style="margin-bottom:28px">
+    <span class="eyebrow">Cart</span>
+    <h1 style="font-size:clamp(1.6rem,4vw,2.2rem);letter-spacing:-0.04em;margin-top:6px">
+        Shopping Cart
+        {% if cart.item_count %}
+            <span style="font-size:1rem;font-weight:500;color:var(--text-muted);letter-spacing:0">({{ cart.item_count }} item{{ cart.item_count|pluralize }})</span>
+        {% endif %}
+    </h1>
+</div>
 
 {% if cart.items %}
-    <section class="reset-card">
-        <span class="eyebrow">Cart payload</span>
-        <div class="reset-grid">
+
+<div class="cart-layout">
+
+    <!-- ─── ITEMS ─── -->
+    <div>
+        <div class="cart-items">
             {% for item in cart.items %}
-                <article class="reset-tile">
-                    <strong>{{ item.product }}</strong>
-                    <p>{{ item.quantity }} x ${{ item.price }}</p>
-                    <span class="mono">Line total: ${{ item.line_total }}</span>
-                </article>
+            <article class="cart-item" data-product-slug="{{ item.product_slug }}">
+
+                <!-- Image -->
+                <div class="cart-item-image">
+                    {% if item.image_url %}
+                        {% if item.product_url %}
+                        <a href="{{ item.product_url }}">
+                            <img src="{{ item.image_url }}" alt="{{ item.image_alt|default:item.product }}" loading="lazy">
+                        </a>
+                        {% else %}
+                            <img src="{{ item.image_url }}" alt="{{ item.image_alt|default:item.product }}" loading="lazy">
+                        {% endif %}
+                    {% else %}
+                        <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--surface-soft);font-size:1.5rem">🛍</div>
+                    {% endif %}
+                </div>
+
+                <!-- Body -->
+                <div class="cart-item-body">
+                    <div class="cart-item-name">
+                        {% if item.product_url %}
+                            <a href="{{ item.product_url }}">{{ item.product }}</a>
+                        {% else %}
+                            {{ item.product }}
+                        {% endif %}
+                    </div>
+                    {% if item.brand %}<div class="cart-item-brand">{{ item.brand }}</div>{% endif %}
+                    <div class="cart-item-qty">
+                        <form method="post" action="{% url 'cart:update-item' item_id=item.id %}" style="margin:0">
+                            {% csrf_token %}
+                            <div class="qty-control" style="display:flex;align-items:center;gap:6px">
+                                <button class="qty-btn qty-dec" type="button" aria-label="Decrease">−</button>
+                                <input class="qty-input" type="number" name="quantity"
+                                    value="{{ item.quantity }}" min="1" max="99"
+                                    aria-label="Quantity">
+                                <button class="qty-btn qty-inc" type="button" aria-label="Increase">+</button>
+                            </div>
+                        </form>
+                        <form method="post" action="{% url 'cart:remove-item' item_id=item.id %}" style="margin:0;margin-left:4px">
+                            {% csrf_token %}
+                            <button class="btn btn-sm btn-danger" type="submit" aria-label="Remove item">
+                                Remove
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Price -->
+                <div class="cart-item-price">
+                    <span style="font-size:12px;color:var(--text-muted)">${{ item.price }} each</span>
+                    <span class="cart-item-total">${{ item.line_total }}</span>
+                </div>
+
+            </article>
             {% endfor %}
         </div>
-        <form action="{% url 'ordering:checkout' %}" method="post">
+
+        <div style="margin-top:16px;display:flex;gap:12px">
+            <a class="btn" href="{% url 'catalog:product-list' %}">
+                ← Continue shopping
+            </a>
+        </div>
+    </div>
+
+    <!-- ─── ORDER SUMMARY + CHECKOUT ─── -->
+    <div class="cart-summary">
+        <div class="cart-summary-header">
+            <h3>Order Summary</h3>
+        </div>
+        <div class="cart-summary-lines">
+            <div class="cart-summary-line">
+                <span>Subtotal ({{ cart.item_count }} item{{ cart.item_count|pluralize }})</span>
+                <span>${{ cart.subtotal }}</span>
+            </div>
+            <div class="cart-summary-line">
+                <span>Shipping</span>
+                <span>${{ cart.shipping_fee }}</span>
+            </div>
+        </div>
+        <div class="cart-summary-total">
+            <span>Total</span>
+            <span>${{ cart.total }}</span>
+        </div>
+
+        <!-- Checkout form -->
+        <form class="checkout-form" method="post" action="{% url 'ordering:checkout' %}">
             {% csrf_token %}
-            <button class="button button-primary" type="submit">Submit placeholder checkout</button>
+            <p class="checkout-form-title">Delivery details</p>
+
+            {% if checkout_form.non_field_errors %}
+                <div class="form-error">{{ checkout_form.non_field_errors }}</div>
+            {% endif %}
+
+            <div class="form-field">
+                <label for="{{ checkout_form.customer_name.id_for_label }}">Full name</label>
+                <input type="text" id="{{ checkout_form.customer_name.id_for_label }}"
+                    name="{{ checkout_form.customer_name.html_name }}"
+                    value="{{ checkout_form.customer_name.value|default:'' }}"
+                    placeholder="Your full name">
+            </div>
+
+            <div class="form-field">
+                <label for="{{ checkout_form.customer_email.id_for_label }}">Email</label>
+                <input type="email" id="{{ checkout_form.customer_email.id_for_label }}"
+                    name="{{ checkout_form.customer_email.html_name }}"
+                    value="{{ checkout_form.customer_email.value|default:'' }}"
+                    placeholder="your@email.com">
+            </div>
+
+            <div class="form-field">
+                <label for="{{ checkout_form.customer_phone.id_for_label }}">Phone</label>
+                <input type="tel" id="{{ checkout_form.customer_phone.id_for_label }}"
+                    name="{{ checkout_form.customer_phone.html_name }}"
+                    value="{{ checkout_form.customer_phone.value|default:'' }}"
+                    placeholder="+84 xxx xxx xxx">
+            </div>
+
+            <div class="form-field">
+                <label for="{{ checkout_form.shipping_address.id_for_label }}">Shipping address</label>
+                <textarea id="{{ checkout_form.shipping_address.id_for_label }}"
+                    name="{{ checkout_form.shipping_address.html_name }}"
+                    placeholder="Street, district, city">{{ checkout_form.shipping_address.value|default:'' }}</textarea>
+            </div>
+
+            <div class="form-field">
+                <label for="{{ checkout_form.note.id_for_label }}">Order note <span style="font-weight:400;text-transform:none">(optional)</span></label>
+                <textarea id="{{ checkout_form.note.id_for_label }}"
+                    name="{{ checkout_form.note.html_name }}"
+                    style="min-height:60px"
+                    placeholder="Special instructions…">{{ checkout_form.note.value|default:'' }}</textarea>
+            </div>
+
+            <button class="btn btn-primary btn-full btn-lg" type="submit">
+                Place order — ${{ cart.total }}
+            </button>
+            <p style="font-size:12px;color:var(--text-muted);text-align:center;margin-top:4px">
+                Leave fields blank to use demo checkout profile
+            </p>
         </form>
-    </section>
+    </div>
+
+</div>
+
 {% else %}
-    <section class="reset-card">
-        <span class="eyebrow">Cart payload</span>
-        <h2>No items in cart.</h2>
-        <p>The placeholder checkout stays empty until products are added again.</p>
-    </section>
+
+<!-- ─── EMPTY CART ─── -->
+<div class="cart-empty">
+    <div class="cart-empty-icon">🛒</div>
+    <h2>Your cart is empty</h2>
+    <p>Browse our catalog and add items to get started.</p>
+    <a class="btn btn-primary btn-lg" href="{% url 'catalog:product-list' %}">
+        Browse products
+    </a>
+</div>
+
 {% endif %}
+
 {% endblock %}

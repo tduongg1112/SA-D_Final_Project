@@ -5,6 +5,7 @@ from config import views as config_views
 
 urlpatterns = [
     path("health", config_views.health, name="health"),
+    path("api/ai/chat/", config_views.ai_chat, name="ai_chat"),
     path("admin/", admin.site.urls),
     path("", include("apps.storefront.urls")),
     path("products/", include("apps.catalog.urls")),

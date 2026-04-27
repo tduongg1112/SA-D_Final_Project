@@ -4,52 +4,150 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title %}NovaMarket{% endblock %}</title>
+    <title>{% block title %}NovaMarket{% endblock %} — NovaMarket</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/app.css' %}">
+    {% block extra_head %}{% endblock %}
 </head>
 <body>
-    <div class="site-shell">
-        <header class="site-header">
-            <div class="container site-header-inner">
-                <a class="brand" href="{% url 'storefront:home' %}">
-                    <span class="brand-dot"></span>
-                    <span class="brand-copy">
-                        <strong>NovaMarket</strong>
-                        <span>Frontend reset</span>
-                    </span>
-                </a>
+<div class="site-shell">
 
-                <nav class="site-nav" aria-label="Primary">
-                    <a class="{% if request.path == '/' %}active{% endif %}" href="{% url 'storefront:home' %}">Home</a>
-                    <a class="{% if '/products/' in request.path %}active{% endif %}" href="{% url 'catalog:product-list' %}">Products</a>
-                    <a class="{% if '/cart/' in request.path %}active{% endif %}" href="{% url 'cart:detail' %}">Cart</a>
-                    <a class="{% if '/dashboard/' in request.path %}active{% endif %}" href="{% url 'dashboard:home' %}">Dashboard</a>
-                    <a class="{% if '/gateway/' in request.path %}active{% endif %}" href="/gateway/">Gateway</a>
-                </nav>
-            </div>
-        </header>
+    <!-- ─── HEADER ─── -->
+    <header class="site-header">
+        <div class="container site-header-inner">
 
-        <main class="container content-shell">
-            {% if messages %}
-                <div class="message-stack">
-                    {% for message in messages %}
-                        <div class="message-card">{{ message }}</div>
-                    {% endfor %}
+            <a class="brand" href="{% url 'storefront:home' %}">
+                <span class="brand-dot"></span>
+                <div class="brand-copy">
+                    <strong>NovaMarket</strong>
+                    <span>Marketplace</span>
                 </div>
-            {% endif %}
-            {% block content %}{% endblock %}
-        </main>
+            </a>
 
-        <footer class="footer">
-            <div class="container footer-card">
-                <p>The previous frontend was cleared. The repository is waiting for a brand-new UI direction.</p>
-                <span class="eyebrow">Frontend reset state</span>
+            <div class="header-search">
+                <form class="search-form" method="get" action="{% url 'catalog:product-list' %}" role="search">
+                    <input
+                        type="search"
+                        name="q"
+                        placeholder="Search products, brands…"
+                        value="{{ request.GET.q|default:'' }}"
+                        aria-label="Search"
+                    >
+                    <button type="submit" aria-label="Search">Search</button>
+                </form>
             </div>
-        </footer>
+
+            <nav class="site-nav" aria-label="Primary">
+                <a class="nav-link" href="{% url 'storefront:home' %}" data-path="/" title="Home">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                    <span class="sr-only">Home</span>
+                </a>
+                <a class="nav-link" href="{% url 'catalog:product-list' %}" data-path="/products/" title="Products">
+                    Products
+                </a>
+                <a class="nav-link nav-cart" href="{% url 'cart:detail' %}" data-path="/cart/" title="Cart">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+                    Cart
+                </a>
+                <div class="nav-divider"></div>
+                {% if user.is_authenticated %}
+                    {% if user.is_staff %}
+                        <a class="nav-link" href="{% url 'dashboard:home' %}" data-path="/dashboard/" title="Dashboard">
+                            Dashboard
+                        </a>
+                    {% endif %}
+                    <form method="post" action="{% url 'logout' %}" style="margin:0">
+                        {% csrf_token %}
+                        <button class="nav-link btn-ghost" type="submit" title="Sign out">
+                            Sign out
+                        </button>
+                    </form>
+                {% else %}
+                    <a class="nav-link btn btn-primary btn-sm" href="{% url 'login' %}">
+                        Sign in
+                    </a>
+                {% endif %}
+            </nav>
+
+        </div>
+    </header>
+
+    <!-- ─── FLASH MESSAGES ─── -->
+    {% if messages %}
+    <div class="container" style="padding-top:16px">
+        <div class="message-stack">
+            {% for message in messages %}
+                <div class="message-card {% if message.tags %}{{ message.tags }}{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
     </div>
-    <script src="{% static 'js/app.js' %}"></script>
+    {% endif %}
+
+    <!-- ─── MAIN ─── -->
+    <main class="container content-shell">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- ─── FOOTER ─── -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-card">
+                <div class="footer-brand">
+                    <span class="brand-dot"></span>
+                    <div class="brand-copy">
+                        <strong>NovaMarket</strong>
+                        <p class="footer-copy">© 2025 NovaMarket. All rights reserved.</p>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <a href="{% url 'catalog:product-list' %}">Shop</a>
+                    <a href="{% url 'cart:detail' %}">Cart</a>
+                    {% if user.is_staff %}<a href="{% url 'dashboard:home' %}">Dashboard</a>{% endif %}
+                    <a href="/gateway/">API Gateway</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</div><!-- end .site-shell -->
+
+<!-- ─── AI CHATBOT ─── -->
+<button class="chat-fab" id="chat-fab" aria-label="Open AI assistant" aria-expanded="false">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+    </svg>
+</button>
+
+<div class="chat-popup" id="chat-popup" role="dialog" aria-label="AI Shopping Assistant" aria-modal="true">
+    <div class="chat-popup-header">
+        <div class="chat-popup-avatar">✦</div>
+        <div class="chat-popup-title">
+            <strong>Nova AI Assistant</strong>
+            <small><span class="chat-status-dot"></span>Online — powered by NovaMarket AI</small>
+        </div>
+        <button class="chat-popup-close" id="chat-close" aria-label="Close chat">✕</button>
+    </div>
+    <div class="chat-messages" id="chat-messages" aria-live="polite"></div>
+    <div class="chat-input-area">
+        <input
+            class="chat-input"
+            id="chat-input"
+            type="text"
+            placeholder="Ask me anything about products…"
+            autocomplete="off"
+            maxlength="400"
+        >
+        <button class="chat-send" id="chat-send" aria-label="Send message">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+    </div>
+</div>
+
+<script src="{% static 'js/app.js' %}"></script>
+{% block extra_scripts %}{% endblock %}
 </body>
 </html>

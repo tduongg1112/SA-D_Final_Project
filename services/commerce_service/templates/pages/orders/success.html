@@ -1,42 +1,112 @@
 {% extends "layouts/base.html" %}
 
-{% block title %}NovaMarket | Order Reset{% endblock %}
+{% block title %}Order Confirmed{% endblock %}
 
 {% block content %}
-{% if order %}
-    <section class="reset-card">
-        <span class="eyebrow">Order success placeholder</span>
-        <h1>Order #{{ order.id }} exists, but the success UI was removed.</h1>
-        <p>The previous order confirmation frontend has been cleared and is awaiting a new design direction.</p>
-        <div class="reset-meta">
-            <div class="reset-tile">
-                <strong>Payment</strong>
-                <p>{{ order.payment_status_label }}</p>
-            </div>
-            <div class="reset-tile">
-                <strong>Shipping</strong>
-                <p>{{ order.shipping_status_label }}</p>
-            </div>
-        </div>
-    </section>
 
-    <section class="reset-card">
-        <span class="eyebrow">Order items</span>
-        <div class="reset-grid">
+{% if order %}
+
+<div class="order-success">
+
+    <!-- Hero confirmation -->
+    <div class="order-success-hero">
+        <div class="order-success-icon">✅</div>
+        <h1>Order confirmed!</h1>
+        <p>Thank you for your purchase. Your order <strong>#{{ order.id }}</strong> has been received and is being processed.</p>
+        <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:4px">
+            <span class="pill pill-success">{{ order.payment_status_label }}</span>
+            <span class="pill">{{ order.shipping_status_label }}</span>
+        </div>
+    </div>
+
+    <!-- Order detail card -->
+    <div class="order-detail-card">
+        <div class="order-detail-header">
+            <div>
+                <p class="eyebrow">Order ID</p>
+                <p style="font-size:1.1rem;font-weight:700;letter-spacing:-0.03em;margin-top:2px">#{{ order.id }}</p>
+            </div>
+            {% if order.customer_name %}
+            <div style="text-align:right">
+                <p class="eyebrow">Customer</p>
+                <p style="font-weight:600;margin-top:2px">{{ order.customer_name }}</p>
+                {% if order.customer_email %}<p style="font-size:13px;color:var(--text-muted)">{{ order.customer_email }}</p>{% endif %}
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Items list -->
+        <div class="order-items-list">
             {% for item in order.items %}
-                <article class="reset-tile">
-                    <strong>{{ item.product_name }}</strong>
-                    <p>{{ item.quantity }} x ${{ item.unit_price }}</p>
-                    <span class="mono">${{ item.line_total }}</span>
-                </article>
+            <div class="order-item-row">
+                <div class="order-item-img">
+                    {% if item.image_url %}
+                        <img src="{{ item.image_url }}" alt="{{ item.image_alt|default:item.product_name }}" loading="lazy">
+                    {% else %}
+                        <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--surface-soft);font-size:1.4rem">🛍</div>
+                    {% endif %}
+                </div>
+                <div>
+                    <p class="order-item-name">{{ item.product_name }}</p>
+                    <p class="order-item-qty">Qty: {{ item.quantity }} × ${{ item.unit_price }}</p>
+                </div>
+                <div class="order-item-price">${{ item.line_total }}</div>
+            </div>
+            {% empty %}
+            <div class="table-empty">No order items found.</div>
             {% endfor %}
         </div>
-    </section>
+
+        <!-- Totals + statuses -->
+        <div class="order-status-row">
+            <div class="order-status-cell">
+                <span>Payment status</span>
+                <span class="pill pill-success" style="width:fit-content;margin-top:4px">{{ order.payment_status_label }}</span>
+            </div>
+            <div class="order-status-cell">
+                <span>Shipping status</span>
+                <span class="pill" style="width:fit-content;margin-top:4px">{{ order.shipping_status_label }}</span>
+            </div>
+        </div>
+
+        {% if order.total %}
+        <div style="padding:16px 20px;display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:1.05rem;border-top:1px solid var(--border)">
+            <span>Order total</span>
+            <span>${{ order.total }}</span>
+        </div>
+        {% endif %}
+
+        {% if order.shipping_address %}
+        <div style="padding:16px 20px;border-top:1px solid var(--border)">
+            <p class="eyebrow" style="margin-bottom:6px">Shipping to</p>
+            <p style="font-size:14px;color:var(--text-muted)">{{ order.shipping_address }}</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- CTA -->
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+        <a class="btn btn-primary btn-lg" href="{% url 'catalog:product-list' %}">
+            Continue shopping
+        </a>
+        <a class="btn btn-lg" href="{% url 'storefront:home' %}">
+            Back to home
+        </a>
+    </div>
+
+</div>
+
 {% else %}
-    <section class="reset-card">
-        <span class="eyebrow">Order unavailable</span>
-        <h1>Order frontend is in reset state.</h1>
-        <p>The order service could not be reached, and the previous success UI no longer exists.</p>
-    </section>
+
+<div class="order-success" style="text-align:center">
+    <div class="empty-state">
+        <span class="empty-state-icon">⚠️</span>
+        <h3>Order unavailable</h3>
+        <p>We couldn't retrieve your order details. The ordering service may be temporarily unavailable.</p>
+        <a class="btn btn-primary" href="{% url 'storefront:home' %}">Back to home</a>
+    </div>
+</div>
+
 {% endif %}
+
 {% endblock %}

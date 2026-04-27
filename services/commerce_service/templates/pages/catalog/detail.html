@@ -1,45 +1,135 @@
 {% extends "layouts/base.html" %}
 
-{% block title %}{{ product.name }} | Frontend Reset{% endblock %}
+{% block title %}{{ product.name }}{% endblock %}
 
 {% block content %}
-<section class="reset-card">
-    <span class="eyebrow">Product detail reset</span>
-    <h1>{{ product.name }}</h1>
-    <p>{{ product.short_description|default:"The detailed product experience has been removed pending redesign." }}</p>
-    <div class="reset-meta">
-        <div class="reset-tile">
-            <strong>Brand</strong>
-            <p>{{ product.brand|default:"Unknown" }}</p>
-        </div>
-        <div class="reset-tile">
-            <strong>Price</strong>
-            <p>${{ product.price }}</p>
-        </div>
-    </div>
-</section>
 
-<section class="reset-card">
-    <span class="eyebrow">Description payload</span>
-    <p>{{ product.description|default:"No detailed description provided." }}</p>
-    <div class="reset-inline">
-        <span class="reset-pill">{{ product.category.name|default:"Category" }}</span>
-        <span class="reset-pill">{{ product.status_label|default:"Unknown status" }}</span>
-        <span class="reset-pill">Stock: {{ product.stock_quantity }}</span>
-    </div>
-</section>
+<!-- ─── BREADCRUMB ─── -->
+<nav style="margin-bottom:24px;font-size:13px;color:var(--text-muted);display:flex;align-items:center;gap:6px">
+    <a href="{% url 'storefront:home' %}" style="color:var(--text-muted)">Home</a>
+    <span>›</span>
+    <a href="{% url 'catalog:product-list' %}" style="color:var(--text-muted)">Products</a>
+    {% if product.category %}
+    <span>›</span>
+    <a href="{% url 'catalog:product-list' %}?category={{ product.category.slug }}" style="color:var(--text-muted)">{{ product.category.name }}</a>
+    {% endif %}
+    <span>›</span>
+    <span style="color:var(--text)">{{ product.name }}</span>
+</nav>
 
-<section class="reset-card">
-    <span class="eyebrow">Related products</span>
-    <div class="reset-grid">
-        {% for product in related_products %}
-            {% include "components/product_card.html" with product=product %}
-        {% empty %}
-            <article class="reset-tile">
-                <strong>No related products</strong>
-                <p>Related product placeholders will return once the new frontend is specified.</p>
-            </article>
+<!-- ─── PRODUCT DETAIL ─── -->
+<div class="product-detail">
+
+    <!-- Gallery -->
+    <div class="product-detail-gallery">
+        <div class="product-detail-main-image">
+            {% if product.image_url %}
+                <img src="{{ product.image_url }}" alt="{{ product.image_alt|default:product.name }}" loading="eager">
+            {% else %}
+                <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--surface-soft);font-size:4rem">🛍</div>
+            {% endif %}
+        </div>
+        {% if product.category_image_url and product.category_image_url != product.image_url %}
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div style="border-radius:var(--radius);overflow:hidden;aspect-ratio:3/2;background:var(--surface-soft);border:1px solid var(--border)">
+                <img src="{{ product.category_image_url }}" alt="{{ product.category.name }}" loading="lazy" style="width:100%;height:100%;object-fit:cover">
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Info -->
+    <div class="product-detail-info">
+
+        <div class="product-detail-eyebrow">
+            {% if product.category %}
+                <a href="{% url 'catalog:product-list' %}?category={{ product.category.slug }}" class="pill pill-accent eyebrow">
+                    {{ product.category.name }}
+                </a>
+            {% endif %}
+            {% if product.featured %}
+                <span class="pill pill-accent">Featured</span>
+            {% endif %}
+            {% if product.status == 'active' %}
+                <span class="pill pill-success">In Stock</span>
+            {% else %}
+                <span class="pill">{{ product.status|default:"" }}</span>
+            {% endif %}
+        </div>
+
+        {% if product.brand %}
+        <p class="eyebrow" style="color:var(--text-muted)">{{ product.brand }}</p>
+        {% endif %}
+        <h1 class="product-detail-title">{{ product.name }}</h1>
+
+        <div class="product-detail-price-row">
+            <span class="product-detail-price">${{ product.price }}</span>
+        </div>
+
+        {% if product.short_description %}
+        <p class="product-detail-desc">{{ product.short_description }}</p>
+        {% endif %}
+
+        <!-- Meta -->
+        <div class="product-detail-meta">
+            {% if product.brand %}
+            <div class="product-detail-meta-row">
+                <span>Brand</span>
+                <span>{{ product.brand }}</span>
+            </div>
+            {% endif %}
+            {% if product.stock_quantity is not None %}
+            <div class="product-detail-meta-row">
+                <span>Stock</span>
+                <span>{{ product.stock_quantity }} available</span>
+            </div>
+            {% endif %}
+            {% if product.category %}
+            <div class="product-detail-meta-row">
+                <span>Category</span>
+                <span>{{ product.category.name }}</span>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Add to cart -->
+        <div class="product-detail-actions">
+            <form method="post" action="{% url 'cart:add' product_id=product.id %}" style="display:contents">
+                {% csrf_token %}
+                <button class="btn btn-primary btn-lg js-add-cart" type="submit"
+                    data-original-text="Add to cart" style="flex:1">
+                    Add to cart
+                </button>
+            </form>
+            <a class="btn btn-lg" href="{% url 'cart:detail' %}">View cart</a>
+        </div>
+
+        <!-- Description -->
+        {% if product.description %}
+        <div style="padding-top:16px;border-top:1px solid var(--border)">
+            <p style="font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);margin-bottom:12px;font-family:'IBM Plex Mono',monospace">Description</p>
+            <p style="color:var(--text-muted);line-height:1.7;font-size:15px">{{ product.description }}</p>
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+
+<!-- ─── RELATED PRODUCTS ─── -->
+{% if related_products %}
+<section class="page-section">
+    <div class="section-header">
+        <h2>You might also like</h2>
+        <a href="{% url 'catalog:product-list' %}{% if product.category %}?category={{ product.category.slug }}{% endif %}">
+            View category →
+        </a>
+    </div>
+    <div class="product-grid">
+        {% for rp in related_products %}
+            {% include "components/product_card.html" with product=rp %}
         {% endfor %}
     </div>
 </section>
+{% endif %}
+
 {% endblock %}

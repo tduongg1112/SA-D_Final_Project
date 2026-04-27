@@ -1,24 +1,81 @@
 {% extends "layouts/base.html" %}
 
-{% block title %}NovaMarket | Login Reset{% endblock %}
+{% block title %}Sign In{% endblock %}
 
 {% block content %}
-<section class="reset-card">
-    <span class="eyebrow">Login reset</span>
-    <h1>Staff sign-in UI has been cleared.</h1>
-    <p>The authentication route remains available, but the old login screen was removed with the rest of the frontend.</p>
-    <form class="reset-stack" method="post">
-        {% csrf_token %}
-        {{ form.non_field_errors }}
-        <label>
-            <span class="sr-only">Username</span>
-            {{ form.username }}
-        </label>
-        <label>
-            <span class="sr-only">Password</span>
-            {{ form.password }}
-        </label>
-        <button class="button button-primary" type="submit">Sign in</button>
-    </form>
-</section>
+<div class="auth-page">
+    <div class="auth-card">
+
+        <!-- Logo -->
+        <div class="auth-logo">
+            <span class="brand-dot"></span>
+            <strong style="font-size:18px;font-weight:700;letter-spacing:-0.04em">NovaMarket</strong>
+        </div>
+
+        <!-- Title -->
+        <div class="auth-title">
+            <h1>Welcome back</h1>
+            <p>Sign in to your staff account to access the dashboard.</p>
+        </div>
+
+        <!-- Errors -->
+        {% if form.non_field_errors %}
+        <div class="form-error">
+            {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Form -->
+        <form class="auth-form" method="post">
+            {% csrf_token %}
+
+            <div class="form-field">
+                <label for="{{ form.username.id_for_label }}">Username</label>
+                <input
+                    type="text"
+                    id="{{ form.username.id_for_label }}"
+                    name="{{ form.username.html_name }}"
+                    value="{{ form.username.value|default:'' }}"
+                    placeholder="Enter your username"
+                    autofocus
+                    autocomplete="username"
+                >
+                {% if form.username.errors %}
+                    <span style="font-size:12px;color:var(--danger)">{{ form.username.errors.0 }}</span>
+                {% endif %}
+            </div>
+
+            <div class="form-field">
+                <label for="{{ form.password.id_for_label }}">Password</label>
+                <input
+                    type="password"
+                    id="{{ form.password.id_for_label }}"
+                    name="{{ form.password.html_name }}"
+                    placeholder="Enter your password"
+                    autocomplete="current-password"
+                >
+                {% if form.password.errors %}
+                    <span style="font-size:12px;color:var(--danger)">{{ form.password.errors.0 }}</span>
+                {% endif %}
+            </div>
+
+            <button class="btn btn-primary btn-full btn-lg" type="submit">
+                Sign in
+            </button>
+        </form>
+
+        <div class="auth-divider">or</div>
+
+        <div style="text-align:center">
+            <a class="btn btn-full" href="{% url 'storefront:home' %}">
+                ← Back to store
+            </a>
+        </div>
+
+        <p style="text-align:center;font-size:12px;color:var(--text-light)">
+            Staff access only. Contact your administrator to request access.
+        </p>
+
+    </div>
+</div>
 {% endblock %}

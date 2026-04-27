@@ -1,56 +1,86 @@
 {% extends "layouts/base.html" %}
 
-{% block title %}NovaMarket | Products Reset{% endblock %}
+{% block title %}Products{% endblock %}
 
 {% block content %}
-<section class="reset-card">
-    <span class="eyebrow">Products</span>
-    <h1>Catalog frontend has been removed.</h1>
-    <p>
-        This page is now a placeholder while the product browsing experience is redesigned from zero.
-        Existing query and category parameters are still visible below for reference.
-    </p>
-    <div class="reset-meta">
-        <div class="reset-tile">
-            <strong>Active query</strong>
-            <p>{{ query|default:"No search keyword" }}</p>
-        </div>
-        <div class="reset-tile">
-            <strong>Active category</strong>
-            <p>{{ active_category|default:"All categories" }}</p>
-        </div>
-    </div>
-</section>
 
-<section class="reset-card">
-    <span class="eyebrow">Categories</span>
-    <div class="reset-grid">
+<!-- ─── PAGE TITLE ─── -->
+<div style="margin-bottom:28px">
+    <span class="eyebrow">Catalog</span>
+    <h1 style="font-size:clamp(1.6rem,4vw,2.2rem);letter-spacing:-0.04em;margin-top:6px">
+        {% if active_category %}
+            {% for category in categories %}{% if category.slug == active_category %}{{ category.name }}{% endif %}{% endfor %}
+        {% elif query %}
+            Search results
+        {% else %}
+            All Products
+        {% endif %}
+    </h1>
+</div>
+
+<!-- ─── SEARCH BANNER ─── -->
+{% if query %}
+<div class="search-banner">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    Results for <strong>"{{ query }}"</strong>
+    &mdash; {{ products|length }} item{{ products|length|pluralize }}
+    <a href="{% url 'catalog:product-list' %}{% if active_category %}?category={{ active_category }}{% endif %}">Clear search ×</a>
+</div>
+{% endif %}
+
+<!-- ─── CATALOG LAYOUT ─── -->
+<div class="catalog-layout">
+
+    <!-- sidebar -->
+    <aside class="filter-sidebar" aria-label="Category filters">
+        <p class="filter-sidebar-title">Categories</p>
+        <a href="{% url 'catalog:product-list' %}{% if query %}?q={{ query }}{% endif %}"
+           class="filter-link {% if not active_category %}active{% endif %}">
+            All products
+        </a>
         {% for category in categories %}
-            <article class="reset-tile">
-                <strong>{{ category.name }}</strong>
-                <p>{{ category.description|default:"Placeholder category entry." }}</p>
-                <span class="mono">{{ category.slug }}</span>
-            </article>
-        {% empty %}
-            <article class="reset-tile">
-                <strong>No categories</strong>
-                <p>No category data is available for the placeholder catalog.</p>
-            </article>
+        <a href="{% url 'catalog:product-list' %}?category={{ category.slug }}{% if query %}&q={{ query }}{% endif %}"
+           class="filter-link {% if active_category == category.slug %}active{% endif %}">
+            {{ category.name }}
+            {% if category.product_count %}
+                <span class="filter-count">{{ category.product_count }}</span>
+            {% endif %}
+        </a>
         {% endfor %}
-    </div>
-</section>
+    </aside>
 
-<section class="reset-card">
-    <span class="eyebrow">Product payload</span>
-    <div class="reset-grid">
-        {% for product in products %}
-            {% include "components/product_card.html" with product=product %}
-        {% empty %}
-            <article class="reset-tile">
-                <strong>No products found</strong>
-                <p>The placeholder catalog is empty for the current filters.</p>
-            </article>
-        {% endfor %}
+    <!-- main grid -->
+    <div>
+        <div class="catalog-header">
+            <p class="catalog-count">
+                Showing <strong>{{ products|length }}</strong> product{{ products|length|pluralize }}
+            </p>
+            <form method="get" action="{% url 'catalog:product-list' %}" style="margin:0;display:flex;gap:8px;align-items:center">
+                {% if active_category %}<input type="hidden" name="category" value="{{ active_category }}">{% endif %}
+                <input
+                    type="search"
+                    name="q"
+                    value="{{ query }}"
+                    placeholder="Filter by keyword…"
+                    style="height:36px;padding:0 12px;border:1px solid var(--border);border-radius:var(--radius-pill);font-size:13px;outline:none;width:180px"
+                >
+                <button class="btn btn-sm btn-primary" type="submit">Filter</button>
+            </form>
+        </div>
+
+        <div class="product-grid">
+            {% for product in products %}
+                {% include "components/product_card.html" with product=product %}
+            {% empty %}
+                <div class="empty-state" style="grid-column:1/-1">
+                    <span class="empty-state-icon">🔍</span>
+                    <h3>No products found</h3>
+                    <p>Try a different search term or browse another category.</p>
+                    <a class="btn btn-primary" href="{% url 'catalog:product-list' %}">View all products</a>
+                </div>
+            {% endfor %}
+        </div>
     </div>
-</section>
+
+</div>
 {% endblock %}
